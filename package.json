@@ -1,0 +1,41 @@
+{
+  "name": "vue3-starter-template",
+  "version": "0.0.1",
+  "private": false,
+  "description": "Prepared structure for start and build applications with Vue.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore"
+  },
+  "dependencies": {
+    "pinia": "^2.0.28",
+    "vue": "^3.2.45",
+    "vue-router": "^4.1.6"
+  },
+  "devDependencies": {
+    "@rushstack/eslint-patch": "^1.1.4",
+    "@vitejs/plugin-vue": "^4.0.0",
+    "@vue/eslint-config-prettier": "^7.0.0",
+    "eslint": "^8.22.0",
+    "eslint-plugin-vue": "^9.3.0",
+    "prettier": "^2.7.1",
+    "vite": "^4.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/eghamat24/vue3-starter-template.git"
+  },
+  "keywords": [
+    "vue",
+    "admin",
+    "template"
+  ],
+  "author": "Eghamat24",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/eghamat24/vue3-starter-template/issues"
+  },
+  "homepage": "https://github.com/eghamat24/vue3-starter-template#readme"
+}
