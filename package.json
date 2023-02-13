@@ -2,7 +2,7 @@
   "name": "vue3-starter-template",
   "version": "0.0.1",
   "private": false,
-  "description": "Prepared structure for start and build applications with Vue.js",
+  "description": "Prepared structure for creating admin panels with Vue.js",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
