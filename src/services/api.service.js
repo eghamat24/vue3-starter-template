@@ -69,7 +69,8 @@ class ApiService {
         return instance.interceptors.response.use(
             onFulfilled,
             function (error) {
-                return onFulfilled(error.response);
+                onFulfilled(error.response);
+                return Promise.reject(error);
             }
         );
     }
