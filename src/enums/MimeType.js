@@ -47,7 +47,7 @@ const MimeType = {
     VIDEO_MPEG: 'video/mpeg',
     VIDEO_OGG: 'video/ogg',
     VIDEO_WEBM: 'video/webm',
-    VIDEO_X_MSVIDEO: 'video/x-msvideo',
+    VIDEO_X_MSVIDEO: 'video/x-msvideo'
 };
 
 export default Object.freeze(MimeType);
