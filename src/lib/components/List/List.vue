@@ -1,13 +1,13 @@
 <template>
-    <ul
-        ref="list"
-        class="fd-list sap-overflow-auto fd-scrollbar"
-        :class="classes"
-        @keydown.down="focusNextItem"
-        @keydown.up="focusPreviousItem"
-    >
-        <slot/>
-    </ul>
+<ul
+    ref="list"
+    class="fd-list sap-overflow-auto fd-scrollbar"
+    :class="classes"
+    @keydown.down="focusNextItem"
+    @keydown.up="focusPreviousItem"
+>
+    <slot/>
+</ul>
 </template>
 
 <script setup>
