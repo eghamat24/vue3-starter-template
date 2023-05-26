@@ -1,10 +1,10 @@
 <template>
-    <span
-        class="fd-form-label"
-        :aria-required="String(required)"
-        :class="classes"
-    >
-        <slot />
+<span
+    class="fd-form-label"
+    :aria-required="String(required)"
+    :class="classes"
+>
+        <slot/>
     </span>
 </template>
 
