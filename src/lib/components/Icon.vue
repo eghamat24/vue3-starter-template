@@ -1,9 +1,9 @@
 <template>
-    <span
-        :class="classes"
-        :style="size"
-        role="presentation"
-    />
+<span
+    :class="classes"
+    :style="size"
+    role="presentation"
+/>
 </template>
 
 <script setup>
