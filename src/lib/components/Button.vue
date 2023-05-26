@@ -8,11 +8,11 @@
 >
     <slot></slot>
     <span v-if="hasSlot('text')" class="fd-button__text">
-            <slot name="text"></slot>
-        </span>
+        <slot name="text"></slot>
+    </span>
     <span v-if="hasSlot('badge')" class="fd-button__badge">
-            <slot name="badge"></slot>
-        </span>
+        <slot name="badge"></slot>
+    </span>
 </button>
 </template>
 
