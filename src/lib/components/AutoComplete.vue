@@ -1,48 +1,48 @@
 <template>
-    <div class="fd-form-item">
-        <div class="fd-popover" ref="select">
-            <div class="fd-popover__control">
-                <div class="fd-select">
-                    <Input
-                        ref="searchInput"
-                        v-model="currentItemTitle"
-                        :clearable="props.clearable"
-                        group
-                        @click="showMenu"
-                        @keydown.down="focusWithArrowDown"
-                        @clear="clear"
-                        @update:modelValue="searchChanged"
-                    >
-                        <InputAddon>
-                            <Icon name="slim-arrow-down" />
-                        </InputAddon>
-                        <Progress v-if="loading" />
-                    </Input>
-                </div>
-            </div>
-            <div
-                :aria-hidden="menuIsHidden"
-                class="fd-popover__body fd-popover__body--no-arrow fd-popover__body--dropdown fd-popover__body--dropdown-fill"
-            >
-                <List
-                    ref="selectList"
-                    v-if="currentItems"
-                    :type="ListTypes.DROPDOWN"
-                    @goAbove="focusOnItem(searchInput.input)"
+<div class="fd-form-item">
+    <div class="fd-popover" ref="select">
+        <div class="fd-popover__control">
+            <div class="fd-select">
+                <Input
+                    ref="searchInput"
+                    v-model="currentItemTitle"
+                    :clearable="props.clearable"
+                    group
+                    @click="showMenu"
+                    @keydown.down="focusWithArrowDown"
+                    @clear="clear"
+                    @update:modelValue="searchChanged"
                 >
-                    <ListItem
-                        v-for="(item, index) in currentItems"
-                        :key="index"
-                        :selected="checkIsSelected(item)"
-                        @click="selectItem(item)"
-                        @keyup.enter="selectItem(item)"
-                    >
-                        {{ item[props.itemTitle] }}
-                    </ListItem>
-                </List>
+                    <InputAddon>
+                        <Icon name="slim-arrow-down"/>
+                    </InputAddon>
+                    <Progress v-if="loading"/>
+                </Input>
             </div>
         </div>
+        <div
+            :aria-hidden="menuIsHidden"
+            class="fd-popover__body fd-popover__body--no-arrow fd-popover__body--dropdown fd-popover__body--dropdown-fill"
+        >
+            <List
+                ref="selectList"
+                v-if="currentItems"
+                :type="ListTypes.DROPDOWN"
+                @goAbove="focusOnItem(searchInput.input)"
+            >
+                <ListItem
+                    v-for="(item, index) in currentItems"
+                    :key="index"
+                    :selected="checkIsSelected(item)"
+                    @click="selectItem(item)"
+                    @keyup.enter="selectItem(item)"
+                >
+                    {{ item[props.itemTitle] }}
+                </ListItem>
+            </List>
+        </div>
     </div>
+</div>
 </template>
 
 <script setup>
@@ -105,7 +105,7 @@ const currentItemTitle = computed({
         if (modelValue && !loading)
             return items.find((item) => item[itemValue] === modelValue)[
                 itemTitle
-            ];
+                ];
         return searchItem.value;
     },
     set(value) {
@@ -117,14 +117,14 @@ const currentItems = computed(() => {
     const { items, itemTitle, count } = props;
     return searchItem.value?.length
         ? items
-              .filter((item) => item[itemTitle].includes(searchItem.value))
-              .slice(0, count)
+            .filter((item) => item[itemTitle].includes(searchItem.value))
+            .slice(0, count)
         : items?.slice(0, count);
 });
 
 const selectedItem = computed(() => {
     const { items, modelValue, returnObject, itemValue } = props;
-    if (returnObject) {
+    if (returnObject){
         return items.find((item) => item === modelValue);
     } else {
         return items.find((item) => item[itemValue] === modelValue);
