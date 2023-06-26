@@ -1,4 +1,4 @@
-import { t } from '@/services/language.service';
+import {t} from '@/services/language.service';
 
 class Validator {
     /**
@@ -83,31 +83,27 @@ class Validator {
                 errors.push(result);
             }
         }
-
         this._errors = errors;
     }
-
     /**
      * @param {String} [message]
      * @returns {Function}
      */
     static required(message) {
-        return function(value) {
+        return function (value) {
             if (value === null || value === undefined || value === '') {
                 return message || t('Validation error message');
             }
-
             return true;
         };
     }
-
     /**
      * @param {Number} length
      * @param {String} [message]
      * @returns {Function}
      */
     static length(length, message) {
-        return function(value) {
+        return function (value) {
             if (typeof value === 'string' && value.length === length) {
                 return true;
             }
@@ -122,12 +118,15 @@ class Validator {
      * @returns {Function}
      */
     static minLength(min, message) {
-        return function(value) {
+        return function (value) {
             if (typeof value === 'string' && value.length >= min) {
                 return true;
             }
+            else{
+                return message || t('Validation error message');
 
-            return message || t('Validation error message');
+            }
+
         };
     }
 }

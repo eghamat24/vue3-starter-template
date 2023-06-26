@@ -6,6 +6,7 @@ import Validator from '@/utils/validator';
 export function useValidator(value, rules, validateOnChange = true) {
     const validator = new Validator(value.value, rules.value);
 
+
     const errors = ref([]);
     const isValid = computed(() => errors.value.length === 0);
 
@@ -20,7 +21,6 @@ export function useValidator(value, rules, validateOnChange = true) {
     function validate() {
         validator.setRules(rules.value);
         errors.value = validator.errors();
-
         return isValid.value;
     }
 

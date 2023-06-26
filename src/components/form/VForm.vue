@@ -1,25 +1,33 @@
 <script>
-import { h, reactive, computed, provide } from 'vue';
+import {h, reactive, computed, provide, watch} from 'vue';
 
 // Utils
-import { getUniqueId } from '@/utils';
-
+import {getUniqueId} from '@/utils';
 export const FORM_INJECTION_KEY = 'FormProvider';
-
 export default {
+    props: {
+        isValid: {
+            default: false
+        }
+    },
+
     name: 'VForm',
-
     emits: ['submit'],
-
     setup(props, context) {
         const inputs = reactive({});
-
-        function validate() {
+        const isValid = computed(() => {
             for (const id in inputs) {
                 const input = inputs[id];
-                input.is_valid = input.validate();
+                input.is_valid = input.validate()
+                if (input.is_valid === false) {
+                    return false;
+                }
             }
-        }
+            return true
+        });
+        watch(isValid, () => {
+            context.emit('update:modelValue', isValid.value);
+        });
 
         function resetValidation() {
             for (const id in inputs) {
@@ -27,51 +35,33 @@ export default {
                 input.resetValidation();
             }
         }
+        function handleSubmit(event) {
+            event.preventDefault();
 
+        }
         provide(FORM_INJECTION_KEY, {
             register(input) {
                 const id = getUniqueId();
-
                 inputs[id] = {
                     is_valid: false,
                     validate: input.validate,
                     resetValidation: input.resetValidation
                 };
-
                 return id;
             },
             unregister(id) {
                 delete inputs[id];
-            }
+            },
+
         });
-
-        const isValid = computed(() => {
-            for (const id in inputs) {
-                const input = inputs[id];
-
-                if (input.is_valid === false) {
-                    return false;
-                }
-            }
-
-            return true;
-        });
-
-        function handleSubmit(event) {
-            event.preventDefault();
-
-            validate();
-
-            if (isValid.value === true) {
-                context.emit('submit', event);
-            }
-        }
 
         return () => h(
             'form',
-            { onSubmit: handleSubmit, onReset: resetValidation },
+            {onSubmit: handleSubmit, onReset: resetValidation,},
             context.slots
         );
     }
 };
 </script>
+
+
