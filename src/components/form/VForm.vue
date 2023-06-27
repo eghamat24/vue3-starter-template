@@ -1,5 +1,5 @@
 <script>
-import {h, reactive, computed, provide, watch} from 'vue';
+import {h, reactive, computed, provide, watch,watchEffect} from 'vue';
 
 // Utils
 import {getUniqueId} from '@/utils';
@@ -12,7 +12,7 @@ export default {
     },
 
     name: 'VForm',
-    emits: ['submit'],
+    emits: ['update:modelValue'],
     setup(props, context) {
         const inputs = reactive({});
         const isValid = computed(() => {
@@ -25,7 +25,7 @@ export default {
             }
             return true
         });
-        watch(isValid, () => {
+        watchEffect(() => {
             context.emit('update:modelValue', isValid.value);
         });
 

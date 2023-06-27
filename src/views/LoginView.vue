@@ -13,10 +13,9 @@
 <main>
     <h1>{{ $t('Login') }}</h1>
     <VForm v-model="isValid" >
-        <VInput  v-model="userName" :type='String' :rules="[Validator.minLength(3)]"/>
+        <VInput  v-model="userName" :rules="[Validator.minLength(3)]"/>
         <VInput
             v-model="password"
-            :type='password'
             :rules="[Validator.minLength(4)]"
         />
         <button :disabled="!isValid" >submit</button>
