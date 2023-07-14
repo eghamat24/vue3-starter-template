@@ -9,6 +9,19 @@ class PropertyService extends CrudService {
     static get URL() {
         return 'properties';
     }
+
+    /**
+     * Get default item
+     *
+     * @returns {Object}
+     */
+    static getDefault() {
+        return {
+            id: undefined,
+            name: undefined,
+            disabled: false
+        };
+    }
 }
 
 export default PropertyService;
