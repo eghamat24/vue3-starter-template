@@ -40,11 +40,11 @@ export function useFetchProperties() {
     };
 }
 
-export function useFetchProperty() {
+export function useFetchProperty(initialValue = null) {
     const { isLoading, startLoading, endLoading } = useLoading();
 
     const propertyLoading = computed(() => isLoading.value);
-    const property = ref(null);
+    const property = ref(initialValue);
 
     function fetchPropertyById(id) {
         startLoading();
