@@ -9,17 +9,16 @@ export function useFetchProperties() {
 
     const propertiesLoading = computed(() => isLoading.value);
     const properties = ref(null);
-    const propertiesKeyById = ref(null);
 
-    function updatePropertiesKeyById() {
-        const temp = {};
+    const propertiesKeyById = computed(() => {
+        const result = {};
 
         for (const property of properties.value) {
-            temp[property.id] = property;
+            result[property.id] = property;
         }
 
-        propertiesKeyById.value = temp;
-    }
+        return result;
+    });
 
     function fetchProperties() {
         startLoading();
@@ -27,7 +26,6 @@ export function useFetchProperties() {
         return PropertyService.getAll()
             .then(function (response) {
                 properties.value = response.data.value;
-                updatePropertiesKeyById();
             })
             .finally(function () {
                 endLoading();
