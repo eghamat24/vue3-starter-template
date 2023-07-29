@@ -27,13 +27,13 @@
     <span v-if="$slots.append" class="input-group-text">
             <slot name="append"></slot>
     </span>
-</div>
 
-<div
-    v-if="errors.length !== 0"
-    class="invalid-feedback"
->
-    {{ errors[0] }}
+    <div
+        v-if="errors.length !== 0"
+        class="invalid-feedback"
+    >
+        {{ errors[0] }}
+    </div>
 </div>
 </template>
 
