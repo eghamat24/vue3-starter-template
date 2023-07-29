@@ -18,7 +18,7 @@ const router = createRouter({
                     path: '',
                     name: 'Dashboard',
                     component: () => import('@/views/DashboardView.vue'),
-                    // beforeEnter: [AuthorizeRoute],
+                    beforeEnter: [AuthorizeRoute],
                     meta: {
                         permissions: ['dashboard']
                     }
