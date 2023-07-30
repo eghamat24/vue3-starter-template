@@ -1,1 +1,15 @@
-@import "@sap-theming/theming-base-content/content/Base/baseLib/sap_horizon/css_variables.css";
+html {
+  direction: ltr;
+}
+
+html, body, #app {
+  height: 100%;
+  width: 100%;
+}
+
+#app {
+  display: flex;
+  flex-direction: column;
+}
+
+@import "bootstrap";
