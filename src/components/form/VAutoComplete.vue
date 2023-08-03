@@ -23,7 +23,7 @@
 
             <ul :class="menuClassNames">
                 <li v-if="filteredItems.length === 0" class="ms-2">
-                    {{ t('No data available') }}
+                    {{ $t('No data available') }}
                 </li>
                 <li
                     v-else
@@ -59,9 +59,6 @@
 
     // Enums
     import ComponentSize from "@/enums/ComponentSize";
-
-    // Services
-    import {t} from "@/services/language.service";
 
     export default {
         name: 'VAutoComplete',
@@ -231,7 +228,6 @@
                 menuClassNames,
 
                 isShowMenu,
-                showMenu,
 
                 itemTextFunction,
 
@@ -248,7 +244,6 @@
 
                 clearInput,
 
-                t
             };
         }
     };
