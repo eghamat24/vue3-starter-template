@@ -1,3 +1,5 @@
+import { reflow, executeAfterTransition } from 'bootstrap/js/src/util';
+
 function isEmptyObject(value) {
     for (const property in value) {
         if (Object.prototype.hasOwnProperty.call(value, property)) {
@@ -6,7 +8,7 @@ function isEmptyObject(value) {
     }
 
     return true;
-}
+};
 
 function isWritableFormElement(element) {
     if (element instanceof HTMLTextAreaElement) {
@@ -17,11 +19,17 @@ function isWritableFormElement(element) {
         element instanceof HTMLInputElement &&
         /^(?:text|email|number|search|tel|url|password)$/i.test(element.type)
     );
-}
+};
 
 let uniqueIdCount = 0;
 const getUniqueId = function () {
     return 'uid_' + uniqueIdCount++;
 };
 
-export { isEmptyObject, isWritableFormElement, getUniqueId };
+export {
+    reflow,
+    executeAfterTransition,
+    isEmptyObject,
+    isWritableFormElement,
+    getUniqueId
+};
