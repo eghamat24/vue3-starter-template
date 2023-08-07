@@ -20,8 +20,21 @@ function isWritableFormElement(element) {
 }
 
 let uniqueIdCount = 0;
-const getUniqueId = function () {
-    return 'uid_' + uniqueIdCount++;
-};
 
-export { isEmptyObject, isWritableFormElement, getUniqueId };
+function getUniqueId() {
+    return 'uid_' + uniqueIdCount++;
+}
+
+// Vue Utils
+
+function hasVNodeSlot(vnode, slotName) {
+    return vnode.children !== null && Object.prototype.hasOwnProperty.call(vnode.children, slotName);
+}
+
+export {
+    isEmptyObject,
+    isWritableFormElement,
+    getUniqueId,
+
+    hasVNodeSlot
+};
