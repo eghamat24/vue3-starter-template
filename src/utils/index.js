@@ -8,7 +8,7 @@ function isEmptyObject(value) {
     }
 
     return true;
-};
+}
 
 function isWritableFormElement(element) {
     if (element instanceof HTMLTextAreaElement) {
@@ -19,17 +19,25 @@ function isWritableFormElement(element) {
         element instanceof HTMLInputElement &&
         /^(?:text|email|number|search|tel|url|password)$/i.test(element.type)
     );
-};
+}
 
 let uniqueIdCount = 0;
-const getUniqueId = function () {
+
+function getUniqueId() {
     return 'uid_' + uniqueIdCount++;
-};
+}
+
+// Vue Utils
+
+function hasVNodeSlot(vnode, slotName) {
+    return vnode.children !== null && Object.prototype.hasOwnProperty.call(vnode.children, slotName);
+}
 
 export {
     reflow,
     executeAfterTransition,
     isEmptyObject,
     isWritableFormElement,
-    getUniqueId
+    getUniqueId,
+    hasVNodeSlot
 };
