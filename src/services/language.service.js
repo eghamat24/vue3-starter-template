@@ -2,8 +2,8 @@ import StorageService from './storage.service';
 
 import { createI18n as createVueI18N } from 'vue-i18n';
 
-import en from '@/locales/en.json';
-import fa from '@/locales/fa.json';
+import en from '@/locales/en/index';
+import fa from '@/locales/fa/index';
 
 class LanguageService {
     /**
