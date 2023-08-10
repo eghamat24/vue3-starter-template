@@ -1,3 +1,5 @@
+import { reflow, executeAfterTransition } from 'bootstrap/js/src/util';
+
 function isEmptyObject(value) {
     for (const property in value) {
         if (Object.prototype.hasOwnProperty.call(value, property)) {
@@ -32,9 +34,10 @@ function hasVNodeSlot(vnode, slotName) {
 }
 
 export {
+    reflow,
+    executeAfterTransition,
     isEmptyObject,
     isWritableFormElement,
     getUniqueId,
-
     hasVNodeSlot
 };
