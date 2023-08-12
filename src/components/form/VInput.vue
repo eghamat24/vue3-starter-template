@@ -113,9 +113,3 @@ export default {
     }
 };
 </script>
-
-<style>
-@import 'fundamental-styles/dist/input.css';
-@import 'fundamental-styles/dist/input-group.css';
-@import 'fundamental-styles/dist/form-message.css';
-</style>
