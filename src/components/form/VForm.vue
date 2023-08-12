@@ -67,10 +67,17 @@ export default {
             }
         }
 
+        function renderSubmitter() {
+            return h('input', {
+                type: 'submit',
+                class: 'visually-hidden'
+            });
+        }
+
         return () => h(
             'form',
             { onSubmit: handleSubmit, onReset: resetValidation },
-            context.slots
+            [context.slots.default(), renderSubmitter()]
         );
     }
 };
