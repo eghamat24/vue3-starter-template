@@ -8,6 +8,7 @@
         :model-value="page"
         @update:model-value="updatePage"
         :total="items.length"
+        :itemsPerPage="itemsPerPage"
     />
 </template>
 
@@ -65,9 +66,7 @@ export default {
 
         return {
             updatePage,
-
             paginatedItems,
-
             columns
         };
     }
