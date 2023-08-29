@@ -1,8 +1,9 @@
 <template>
     <tbody>
-    <tr class="fs-2 text-center" v-if="items.length === 0">
-        <td class="text-mute" :colspan="columns.length">{{$t('No data available')}}</td>
-    </tr>
+        <tr v-if="items.length === 0">
+            <td class="text-center" :colspan="columns.length">{{ $t('No data available') }}</td>
+        </tr>
+
         <tr v-for="(item, itemIndex) of items" :key="itemIndex">
             <td v-for="(column, columnIndex) of columns" :key="columnIndex">
                 <component
