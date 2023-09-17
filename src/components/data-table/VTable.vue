@@ -1,7 +1,10 @@
 <template>
     <table class="table table-bordered">
         <VTableHeader :columns="columns"/>
-        <VTableBody :columns="columns" :items="paginatedItems"/>
+        <VTableBody
+            :columns="columns"
+            :row-slot="rowSlot"
+            :items="paginatedItems"/>
     </table>
 
     <VPagination
@@ -50,6 +53,7 @@ export default {
     emits: ['update:page', 'update:itemsPerPage'],
 
     setup(props, context) {
+        const rowSlot = computed(() => context.slots.row);
         const columns = computed(() => context.slots.default());
 
         function updatePage(value) {
@@ -68,6 +72,7 @@ export default {
 
             paginatedItems,
 
+            rowSlot,
             columns
         };
     }
