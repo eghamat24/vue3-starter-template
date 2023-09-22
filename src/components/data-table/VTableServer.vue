@@ -1,19 +1,20 @@
 <template>
-    <div v-if="isLoading" class="table-spinner-loading spinner-border text-primary">
-    </div>
-    <div v-else>
-        <table class="table">
-            <VTableHeader :columns="columns"/>
-            <VTableBody :columns="columns" :items="items" :row-slot="rowSlot"/>
-        </table>
-
-        <VPagination
-            :model-value="page"
-            :total="itemsLength"
-            itemsPerPage="10"
-            @update:model-value="updatePage"
+    <table class="table">
+        <VTableHeader :columns="columns"/>
+        <VTableBody
+            :columns="columns"
+            :items="items"
+            :row-slot="rowSlot"
+            :is-loading="isLoading"
         />
-    </div>
+    </table>
+
+    <VPagination
+        :model-value="page"
+        :total="itemsLength"
+        itemsPerPage="10"
+        @update:model-value="updatePage"
+    />
 </template>
 
 <script>

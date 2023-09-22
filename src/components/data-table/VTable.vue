@@ -4,7 +4,9 @@
         <VTableBody
             :columns="columns"
             :row-slot="rowSlot"
-            :items="paginatedItems"/>
+            :items="paginatedItems"
+            :is-loading="isLoading"
+        />
     </table>
 
     <VPagination
@@ -15,14 +17,14 @@
 </template>
 
 <script>
-import { computed } from 'vue';
+    import { computed } from 'vue';
 
-// Components
-import VTableHeader from '@/components/data-table/VTableHeader.vue';
-import VTableBody from '@/components/data-table/VTableBody.vue';
-import VPagination from '@/components/pagination/VPagination.vue';
+    // Components
+    import VTableHeader from '@/components/data-table/VTableHeader.vue';
+    import VTableBody from '@/components/data-table/VTableBody.vue';
+    import VPagination from '@/components/pagination/VPagination.vue';
 
-export default {
+    export default {
     name: 'VTable',
 
     components: {
