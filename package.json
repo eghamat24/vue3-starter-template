@@ -20,8 +20,9 @@
     "devDependencies": {
         "@rushstack/eslint-patch": "^1.1.4",
         "@vitejs/plugin-vue": "^4.0.0",
-        "eslint": "^8.22.0",
-        "eslint-plugin-vue": "^9.3.0",
+        "eslint": "^8.53.0",
+        "eslint-plugin-vue": "^9.18.1",
+        "esquery": "^1.5.0",
         "rtlcss": "^4.1.0",
         "vite": "^4.0.0"
     },
