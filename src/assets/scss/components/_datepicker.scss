@@ -1,0 +1,88 @@
+@import "bootstrap/scss/tooltip";
+
+.datepicker {
+
+
+    * {
+        user-select: none;
+    }
+
+    width: 300px;
+    position: relative;
+
+
+    &__input {
+        border-radius: 8px;
+        padding: 8px;
+        border: 1px solid #ececec;
+        text-align: center;
+        font-size: 0.8em;
+    }
+
+    &__popup {
+        position: absolute;
+        top: 40px;
+        background: #fff;
+        box-shadow: 0 0 10px 4px #f3f3f3;
+        width: 100%;
+        border-radius: 8px;
+
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 0;
+
+            &__arrow {
+                font-weight: 600;
+                cursor: pointer;
+                padding: 0 10px;
+            }
+        }
+
+        .content {
+            .box {
+                text-align: center;
+                width: 35px;
+                height: 35px;
+                padding: 4px 0;
+                cursor: pointer;
+                border-radius: 50px;
+                color: #4c4c4c;
+                transition: background-color ease 0.2s;
+
+                &:hover {
+                    background: #e0e0e0;
+                }
+
+                &--active {
+                    border: 2px solid #0baf74;
+                }
+
+                &--disable {
+                    color: #c9c9c9;
+                    cursor: not-allowed;
+                    &:hover {
+                        background: initial;
+                    }
+                }
+            }
+
+            &__header {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                background: #ddd;
+            }
+
+            .days {
+                &__row {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    flex-wrap: wrap;
+                }
+            }
+        }
+    }
+}
