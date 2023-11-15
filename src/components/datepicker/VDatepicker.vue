@@ -46,11 +46,11 @@ export default {
     props: {
         min: {
             type: Date,
-            default: new Date(2023,11,10)
+            default: new Date(2023, 11, 10)
         },
         max: {
             type: Date,
-            default: new Date(2023,11,25)
+            default: new Date(2023, 11, 20)
         },
         year: {
             type: Number,
@@ -65,10 +65,6 @@ export default {
     },
 
     emits: [],
-
-    methods: {
-        //....
-    },
 
     mounted() {
         this.initDatepicker();
@@ -91,7 +87,8 @@ export default {
             let monthNumber = month.value;
             let yearNumber = _date.getFullYear();
             let monthDays = _date.getDate();
-            let firstDay = new Date(year.value, month.value, 1);
+            let _tempMonth = month.value - 1;
+            let firstDay = new Date(year.value, _tempMonth, 1);
             let firstDayName = firstDay.toString().split(' ')[0];
             let firstDayIndex = WEEK_DAYS.indexOf(firstDayName);
             const totalDays = monthDays + firstDayIndex;
@@ -136,7 +133,6 @@ export default {
             switch (type) {
                 case 'next':
                     month.value++;
-                    console.log(month.value);
                     initDatepicker();
                     break;
                 case 'pre':
