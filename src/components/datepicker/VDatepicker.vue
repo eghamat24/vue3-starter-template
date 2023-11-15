@@ -135,11 +135,12 @@ export default {
         const handleArrowMonth = function (e, type) {
             switch (type) {
                 case 'next':
-                    month.value += 1;
+                    month.value++;
+                    console.log(month.value);
                     initDatepicker();
                     break;
                 case 'pre':
-                    month.value -= 1;
+                    month.value--;
                     initDatepicker()
                     break
             }
