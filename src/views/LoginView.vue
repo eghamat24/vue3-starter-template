@@ -17,13 +17,13 @@
     <br/>
     <div>
         selected Date: {{ selectedDate }}
+
     </div>
 </main>
 </template>
 <script setup>
 import VDatepicker from "@/components/datepicker/VDatepicker.vue";
 import {ref} from "vue";
-
 const selectedDate = ref('');
 
 
