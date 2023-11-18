@@ -2,21 +2,20 @@
 <div class="datepicker" tabindex="0" @blur="initShowPopup(false)">
     <!--<input type="text" tabindex="0" class="form-control" @click="initShowPopup"/>-->
     <div class="datepicker__input" @click="initShowPopup">{{ selectedDate }}</div>
-    <div v-if="showPopup" class="datepicker__popup">
+    <div v-if="!showPopup"
+         class="datepicker__popup">
+        <div class="datepicker__nationality" @click="handleNationality">
+            تقویم
+            {{ direction === 'rtl' ? 'میلادی ' : 'شمسی' }}
+        </div>
         <div class="header">
             <div class="header__arrow" @click="handleArrowMonth(e,'next')"> &lt;</div>
             <div class="header__month">{{ currentDateHeader }}</div>
             <div class="header__arrow" @click="handleArrowMonth(e,'pre')">></div>
         </div>
-        <div class="content">
+        <div class="content" :style="{direction:direction}">
             <div class="content__header">
-                <div class="box">Sun</div>
-                <div class="box">Mon</div>
-                <div class="box">Tue</div>
-                <div class="box">Wed</div>
-                <div class="box">Thu</div>
-                <div class="box">Fri</div>
-                <div class="box">Sat</div>
+                <div class="box" v-for="(weekday,index) in weekdays" :key="index">{{ weekday }}</div>
             </div>
             <div class="days">
                 <div v-for="(row,index) in dayArr" :key="index" class="days__row">
@@ -24,11 +23,10 @@
                          @click="handleSelectDay(cel)"
                          :key="id"
                          class="box"
-                         :class="{ ' box--active': cel.active, ' box--disable': cel.disable }">
+                         :class="{ ' box--active': cel.active, ' box--disable': cel.disable,' box--same': cel.sameDay }">
                         {{ cel.text }}
                     </div>
                 </div>
-
             </div>
         </div>
     </div>
@@ -39,6 +37,10 @@
 <script>
 
 import {ref} from "vue";
+import moment from "moment-jalaali";
+import WeekDays from "@/enums/WeekDays";
+import Pasoonate from "pasoonate/dist/Pasoonate";
+import pasoonate from "pasoonate/dist/Pasoonate";
 
 export default {
     name: 'VDatepicker',
@@ -78,12 +80,18 @@ export default {
         let selectedDate = ref(new Date().toLocaleString('en-us', {year: "numeric", month: "numeric", day: "numeric"}));
         let min = ref(props.min);
         let max = ref(props.max);
+        let direction = ref('rtl');
+        let weekdays = ref(WeekDays.gregorian);
 
 
         // خروجی لازم برای سطرها و ستون های تقویم رو آماده میکنه(در قالب یک آرایه دو بعدی)
         const initDatepicker = function () {
-            const WEEK_DAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
             const _date = new Date(year.value, month.value, 0);
+            const _dayArr = [];
+            const timeStampOfDate = +new Date(_date) / 1000;
+            const _pasoonate = Pasoonate.make(timeStampOfDate);
+            let WEEK_DAYS = weekdays.value;
+            let currentMonth = pasoonate.make().gregorian().format('M');
             let monthNumber = month.value;
             let yearNumber = _date.getFullYear();
             let monthDays = _date.getDate();
@@ -91,14 +99,34 @@ export default {
             let firstDay = new Date(year.value, _tempMonth, 1);
             let firstDayName = firstDay.toString().split(' ')[0];
             let firstDayIndex = WEEK_DAYS.indexOf(firstDayName);
-            const totalDays = monthDays + firstDayIndex;
-            const maxRows = Math.ceil(totalDays / WEEK_DAYS.length);
+            let totalDays = monthDays + firstDayIndex;
+            let maxRows = Math.ceil(totalDays / WEEK_DAYS.length);
             let date = new Date();
             let currentDay = date.getDate();
             let day = 1;
-            const _dayArr = [];
             currentDateHeader.value = `${new Date(year.value, month.value, 0).toLocaleString('default', {month: 'short'})}
             ${new Date(year.value, month.value, 0).toLocaleString('default', {year: 'numeric'})}`
+
+
+            if (direction.value === 'ltr') {
+                WEEK_DAYS = WeekDays.gregorian;
+                weekdays.value = WeekDays.gregorian;
+            } else if (direction.value === 'rtl') {
+                WEEK_DAYS = WeekDays.jalali;
+                currentMonth = pasoonate.make().jalali().format('M');
+                weekdays.value = WeekDays.jalali;
+                let _firstDayJalali = +moment(firstDay).format('jD');
+                let _firstDayofMonth = new Date(year.value, _tempMonth, 1 - _firstDayJalali + 1);
+                let _firstDayWeekdayJalali = new Intl.DateTimeFormat('fa-IR-u-nu-latn', {weekday: 'short'}).format(_firstDayofMonth);
+                firstDayIndex = WEEK_DAYS.indexOf(_firstDayWeekdayJalali);
+                totalDays = +_pasoonate.jalali().subMonth(1).endOfMonth().format('d') + firstDayIndex;
+                maxRows = Math.ceil(totalDays / WEEK_DAYS.length);
+                currentDateHeader.value = `${new Intl.DateTimeFormat('fa-IR-u-nu-latn', {month: 'short'}).format(_firstDayofMonth)}
+             ${_pasoonate.jalali().format('yyyy')}`;
+                currentDay = +pasoonate.make().jalali().format('d');
+                monthNumber = +_pasoonate.jalali().format('M');
+                yearNumber = +_pasoonate.jalali().format('yyyy')
+            }
 
 
             for (let i = 1; i <= maxRows; i++) {
@@ -109,8 +137,10 @@ export default {
                         _dayArr[i - 1].push({
                             id: _day,
                             text: _day.toString(),
-                            active: (_day === currentDay),
-                            disable: (new Date(yearNumber, monthNumber, _day) >= min.value && new Date(yearNumber, monthNumber, _day) <= max.value),
+                            active: (_day == currentDay && currentMonth == monthNumber),
+                            sameDay: (_day == currentDay),
+                            // disable: !(new Date(yearNumber, monthNumber, _day) >= min.value && new Date(yearNumber, monthNumber, _day) <= max.value),
+                            disable: false,
                             month: monthNumber,
                             year: yearNumber,
                         });
@@ -133,16 +163,15 @@ export default {
             switch (type) {
                 case 'next':
                     month.value++;
-                    initDatepicker();
                     break;
                 case 'pre':
                     month.value--;
-                    initDatepicker()
                     break
             }
+            initDatepicker()
         }
 
-        // ایونت های ماه قبل و ماه بعد رو هندل میکنه
+        // ایونت نمایش پاپ آپ تقویم رو هندل میکنه
         const initShowPopup = function (state = true) {
             showPopup.value = state;
         }
@@ -156,15 +185,24 @@ export default {
             }
         }
 
+        // ایونت تبدیل تاریخ رو هندل میکنه
+        const handleNationality = function () {
+            direction.value = (direction.value === 'rtl') ? 'ltr' : 'rtl';
+            initDatepicker();
+        }
+
         return {
             currentDateHeader,
             selectedDate,
             showPopup,
             dayArr,
+            weekdays,
+            direction,
             // month,
             // year,
             // min,
             // max,
+            handleNationality,
             handleArrowMonth,
             handleSelectDay,
             initDatepicker,

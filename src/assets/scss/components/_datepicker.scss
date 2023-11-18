@@ -7,7 +7,7 @@
         user-select: none;
     }
 
-    width: 300px;
+    width: 600px;
     position: relative;
 
 
@@ -17,6 +17,13 @@
         border: 1px solid #ececec;
         text-align: center;
         font-size: 0.8em;
+    }
+
+    &__nationality {
+        padding: 10px 0 0 0;
+        text-align: center;
+        color: #0d6efd;
+        font-weight: 600;
     }
 
     &__popup {
@@ -43,12 +50,15 @@
         .content {
             .box {
                 text-align: center;
-                width: 35px;
-                height: 35px;
-                padding: 4px 0;
+                width: 70px;
+                height: 40px;
+                padding: 6px 0;
                 cursor: pointer;
                 border-radius: 50px;
                 color: #4c4c4c;
+                text-overflow: ellipsis;
+                overflow: hidden;
+                white-space: nowrap;
                 transition: background-color ease 0.2s;
 
                 &:hover {
@@ -59,9 +69,14 @@
                     border: 2px solid #0baf74;
                 }
 
+                &--same {
+                    background: #e2fff2;
+                }
+
                 &--disable {
                     color: #c9c9c9;
                     cursor: not-allowed;
+
                     &:hover {
                         background: initial;
                     }
