@@ -2,7 +2,7 @@
 <div class="datepicker" tabindex="0" @blur="initShowPopup(false)">
     <!--<input type="text" tabindex="0" class="form-control" @click="initShowPopup"/>-->
     <div class="datepicker__input" @click="initShowPopup">{{ selectedDate }}</div>
-    <div v-if="showPopup"
+    <div v-if="!showPopup"
          class="datepicker__popup">
         <div class="datepicker__nationality" @click="handleNationality">
             تقویم
@@ -47,11 +47,11 @@ export default {
     props: {
         min: {
             type: Date,
-            default: new Date(2023, 11, 10)
+            default: ''
         },
         max: {
             type: Date,
-            default: new Date(2023, 11, 20)
+            default: ''
         },
         year: {
             type: Number,
@@ -79,11 +79,13 @@ export default {
         let selectedDate = ref(new Date().toLocaleString('en-us', {year: "numeric", month: "numeric", day: "numeric"}));
         let direction = ref('ltr');
         let weekdays = ref(WeekDays.gregorian);
+        let min = ref(props.min);
+        let max = ref(props.max);
 
 
         // دیتای لازم برای حلقه های ایجاد کننده سطر و ستون های تقویم رو آماده میکنه
-        const calculateDate = function (data = {}) {
-            const type = direction.value
+        const calculateDate = function (direction, data = {}) {
+            const type = direction;
             const gregorianSelectedDate = new Date(data.year, data.month, 0);
             const gregorianSelectedDateTimeStamp = +new Date(gregorianSelectedDate) / 1000; // per second
             const pasoonatedSelectedDate = Pasoonate.make(gregorianSelectedDateTimeStamp);
@@ -122,12 +124,14 @@ export default {
              ${pasoonatedSelectedDate.jalali().format('yyyy')}`;
                     currentDay = +Pasoonate.make().jalali().format('d');
                     monthNumber = +pasoonatedSelectedDate.jalali().format('M');
-                    yearNumber = +pasoonatedSelectedDate.jalali().format('yyyy')
+                    yearNumber = +pasoonatedSelectedDate.jalali().format('yyyy');
+                    selectedDate.value = `${yearNumber}/${monthNumber}/${currentDay}`;
                     break;
                 case 'ltr':
                     weekdays.value = WeekDays.gregorian;
                     firstDayIndex = weekdays.value.indexOf(firstDayName);
                     totalDays = monthDays + firstDayIndex;
+                    selectedDate.value = `${yearNumber}/${monthNumber}/${currentDay}`;
                     break;
             }
             return {
@@ -145,7 +149,7 @@ export default {
 
         // خروجی لازم برای سطرها و ستون های تقویم رو آماده میکنه(در قالب یک آرایه دو بعدی)
         const initDatepicker = function () {
-            const data = calculateDate({year: year.value, month: month.value, day: 0});
+            const data = calculateDate(direction.value, {year: year.value, month: month.value, day: 0});
             const _dayArr = [];
             let day = 1;
             for (let i = 1; i <= data.maxRows; i++) {
@@ -158,8 +162,7 @@ export default {
                             text: _day.toString(),
                             active: (_day === data.currentDay && data.liveMonth === data.monthNumber),
                             sameDay: (_day === data.currentDay),
-                            // disable: !(new Date(yearNumber, monthNumber, _day) >= min.value && new Date(yearNumber, monthNumber, _day) <= max.value),
-                            disable: false,
+                            disable: handleDisableDay(data, _day),
                             month: data.monthNumber,
                             year: data.yearNumber,
                         });
@@ -175,6 +178,22 @@ export default {
                 }
             }
             dayArr.value = _dayArr;
+        };
+
+        // برای هندل کردن روزای خارج از محدوده(فعلا برای جلالی کار نمیکنه)
+        const handleDisableDay = function (data, _day) {
+            let date = new Date(data.yearNumber, data.monthNumber - 1, _day);
+            if (direction.value === 'rtl')
+                date = Pasoonate.make(date);
+
+            console.log(min.value);
+            console.log(date);
+
+            if (typeof min.value == "object" && (date <= min.value))
+                return true;
+            if (typeof max.value == "object" && date >= max.value)
+                return true;
+            return false;
         };
 
         // ایونت های ماه قبل و ماه بعد رو هندل میکنه
