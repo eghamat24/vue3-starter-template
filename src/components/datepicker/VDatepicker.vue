@@ -185,10 +185,6 @@ export default {
             let date = new Date(data.yearNumber, data.monthNumber - 1, _day);
             if (direction.value === 'rtl')
                 date = Pasoonate.make(date);
-
-            console.log(min.value);
-            console.log(date);
-
             if (typeof min.value == "object" && (date <= min.value))
                 return true;
             if (typeof max.value == "object" && date >= max.value)
