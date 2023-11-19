@@ -40,7 +40,6 @@ import {ref} from "vue";
 import moment from "moment-jalaali";
 import WeekDays from "@/enums/WeekDays";
 import Pasoonate from "pasoonate/dist/Pasoonate";
-import pasoonate from "pasoonate/dist/Pasoonate";
 
 export default {
     name: 'VDatepicker',
@@ -78,74 +77,94 @@ export default {
         let year = ref(props.year);
         let showPopup = ref(false);
         let selectedDate = ref(new Date().toLocaleString('en-us', {year: "numeric", month: "numeric", day: "numeric"}));
-        let min = ref(props.min);
-        let max = ref(props.max);
-        let direction = ref('rtl');
+        let direction = ref('ltr');
         let weekdays = ref(WeekDays.gregorian);
 
 
-        // خروجی لازم برای سطرها و ستون های تقویم رو آماده میکنه(در قالب یک آرایه دو بعدی)
-        const initDatepicker = function () {
-            const _date = new Date(year.value, month.value, 0);
-            const _dayArr = [];
-            const timeStampOfDate = +new Date(_date) / 1000;
-            const _pasoonate = Pasoonate.make(timeStampOfDate);
-            let WEEK_DAYS = weekdays.value;
-            let currentMonth = pasoonate.make().gregorian().format('M');
+        // دیتای لازم برای حلقه های ایجاد کننده سطر و ستون های تقویم رو آماده میکنه
+        const calculateDate = function (data = {}) {
+            const type = direction.value
+            const gregorianSelectedDate = new Date(data.year, data.month, 0);
+            const gregorianSelectedDateTimeStamp = +new Date(gregorianSelectedDate) / 1000; // per second
+            const pasoonatedSelectedDate = Pasoonate.make(gregorianSelectedDateTimeStamp);
+            const liveGregorian = Pasoonate.make().gregorian();
+            const liveJalali = Pasoonate.make().jalali();
+
+            // current(selected) date
             let monthNumber = month.value;
-            let yearNumber = _date.getFullYear();
-            let monthDays = _date.getDate();
-            let _tempMonth = month.value - 1;
-            let firstDay = new Date(year.value, _tempMonth, 1);
+            let yearNumber = pasoonatedSelectedDate.gregorian().format('yyyy');
+            let monthDays = +pasoonatedSelectedDate.gregorian().endOfMonth().format('d');
+
+            // live date
+            let liveMonth = liveGregorian.format('M');
+
+            let firstDay = new Date(year.value, month.value - 1, 1);
             let firstDayName = firstDay.toString().split(' ')[0];
-            let firstDayIndex = WEEK_DAYS.indexOf(firstDayName);
+            let firstDayIndex = weekdays.value.indexOf(firstDayName);
             let totalDays = monthDays + firstDayIndex;
-            let maxRows = Math.ceil(totalDays / WEEK_DAYS.length);
+            let maxRows = Math.ceil(totalDays / weekdays.value.length);
             let date = new Date();
             let currentDay = date.getDate();
-            let day = 1;
             currentDateHeader.value = `${new Date(year.value, month.value, 0).toLocaleString('default', {month: 'short'})}
             ${new Date(year.value, month.value, 0).toLocaleString('default', {year: 'numeric'})}`
 
-
-            if (direction.value === 'ltr') {
-                WEEK_DAYS = WeekDays.gregorian;
-                weekdays.value = WeekDays.gregorian;
-            } else if (direction.value === 'rtl') {
-                WEEK_DAYS = WeekDays.jalali;
-                currentMonth = pasoonate.make().jalali().format('M');
-                weekdays.value = WeekDays.jalali;
-                let _firstDayJalali = +moment(firstDay).format('jD');
-                let _firstDayofMonth = new Date(year.value, _tempMonth, 1 - _firstDayJalali + 1);
-                let _firstDayWeekdayJalali = new Intl.DateTimeFormat('fa-IR-u-nu-latn', {weekday: 'short'}).format(_firstDayofMonth);
-                firstDayIndex = WEEK_DAYS.indexOf(_firstDayWeekdayJalali);
-                totalDays = +_pasoonate.jalali().subMonth(1).endOfMonth().format('d') + firstDayIndex;
-                maxRows = Math.ceil(totalDays / WEEK_DAYS.length);
-                currentDateHeader.value = `${new Intl.DateTimeFormat('fa-IR-u-nu-latn', {month: 'short'}).format(_firstDayofMonth)}
-             ${_pasoonate.jalali().format('yyyy')}`;
-                currentDay = +pasoonate.make().jalali().format('d');
-                monthNumber = +_pasoonate.jalali().format('M');
-                yearNumber = +_pasoonate.jalali().format('yyyy')
+            switch (type) {
+                case 'rtl':
+                    liveMonth = +liveJalali.format('M');
+                    weekdays.value = WeekDays.jalali;
+                    let _firstDayJalali = +moment(firstDay).format('jD');
+                    let _firstDayofMonth = new Date(year.value, month.value - 1, 1 - _firstDayJalali + 1);
+                    let _firstDayWeekdayJalali = new Intl.DateTimeFormat('fa-IR-u-nu-latn', {weekday: 'short'}).format(_firstDayofMonth);
+                    firstDayIndex = weekdays.value.indexOf(_firstDayWeekdayJalali);
+                    totalDays = +pasoonatedSelectedDate.jalali().subMonth(1).endOfMonth().format('d') + firstDayIndex;
+                    maxRows = Math.ceil(totalDays / weekdays.value.length);
+                    currentDateHeader.value = `${new Intl.DateTimeFormat('fa-IR-u-nu-latn', {month: 'short'}).format(_firstDayofMonth)}
+             ${pasoonatedSelectedDate.jalali().format('yyyy')}`;
+                    currentDay = +Pasoonate.make().jalali().format('d');
+                    monthNumber = +pasoonatedSelectedDate.jalali().format('M');
+                    yearNumber = +pasoonatedSelectedDate.jalali().format('yyyy')
+                    break;
+                case 'ltr':
+                    weekdays.value = WeekDays.gregorian;
+                    firstDayIndex = weekdays.value.indexOf(firstDayName);
+                    totalDays = monthDays + firstDayIndex;
+                    break;
             }
+            return {
+                direction: type,
+                maxRows: maxRows,
+                weekdays: weekdays,
+                firstDayIndex: firstDayIndex,
+                totalDays: totalDays,
+                currentDay: currentDay,
+                liveMonth: liveMonth,
+                monthNumber: monthNumber,
+                yearNumber: yearNumber,
+            };
+        };
 
-
-            for (let i = 1; i <= maxRows; i++) {
+        // خروجی لازم برای سطرها و ستون های تقویم رو آماده میکنه(در قالب یک آرایه دو بعدی)
+        const initDatepicker = function () {
+            const data = calculateDate({year: year.value, month: month.value, day: 0});
+            const _dayArr = [];
+            let day = 1;
+            for (let i = 1; i <= data.maxRows; i++) {
                 _dayArr.push([]);
-                for (let j = 1; j <= WEEK_DAYS.length; j++) {
-                    let _day = day - firstDayIndex;
-                    if (day <= totalDays && day > firstDayIndex) {
+                for (let j = 1; j <= weekdays.value.length; j++) {
+                    let _day = day - data.firstDayIndex;
+                    if (day <= data.totalDays && day > data.firstDayIndex) {
                         _dayArr[i - 1].push({
                             id: _day,
                             text: _day.toString(),
-                            active: (_day == currentDay && currentMonth == monthNumber),
-                            sameDay: (_day == currentDay),
+                            active: (_day === data.currentDay && data.liveMonth === data.monthNumber),
+                            sameDay: (_day === data.currentDay),
                             // disable: !(new Date(yearNumber, monthNumber, _day) >= min.value && new Date(yearNumber, monthNumber, _day) <= max.value),
                             disable: false,
-                            month: monthNumber,
-                            year: yearNumber,
+                            month: data.monthNumber,
+                            year: data.yearNumber,
                         });
                     }
-                    if (day > totalDays || day <= firstDayIndex) {
+                    if (day > data.totalDays || day <= data.firstDayIndex) {
                         _dayArr[i - 1].push({
                             id: null,
                             text: '',
@@ -198,10 +217,6 @@ export default {
             dayArr,
             weekdays,
             direction,
-            // month,
-            // year,
-            // min,
-            // max,
             handleNationality,
             handleArrowMonth,
             handleSelectDay,
