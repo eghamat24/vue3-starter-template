@@ -34,7 +34,7 @@
         position: absolute;
         top: 40px;
         background: #fff;
-        //box-shadow: 0 0 10px 4px #f3f3f3;
+        padding: 20px;
         width: 100%;
         border-radius: 8px;
         border: 1px solid #ededed;
@@ -69,11 +69,11 @@
                 }
 
                 &--disable {
-                    color: #c9c9c9;
-                    cursor: not-allowed;
+                    color: #c9c9c9 !important;
+                    cursor: not-allowed !important;
 
                     &:hover {
-                        background: initial;
+                        border-color: transparent !important;
                     }
                 }
             }
