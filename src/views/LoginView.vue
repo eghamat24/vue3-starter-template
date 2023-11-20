@@ -13,7 +13,7 @@
 
 <main>
     <h1>{{ $t('Login') }}</h1>
-    <VDatepicker  :min="new Date(2023,10,18)"  year="2023" month="11" @select-date="(date)=> selectedDate = date"/>
+    <VDatepicker :min="new Date(2023,10,18)" year="2023" month="11" @select-date="(date)=> selectedDate = date"/>
     <br/>
     <div>
         selected Date: {{ selectedDate }}
@@ -24,6 +24,7 @@
 <script setup>
 import VDatepicker from "@/components/datepicker/VDatepicker.vue";
 import {ref} from "vue";
+
 const selectedDate = ref('');
 
 
