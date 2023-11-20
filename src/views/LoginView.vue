@@ -13,7 +13,8 @@
 
 <main>
     <h1>{{ $t('Login') }}</h1>
-    <VDatepicker :min="new Date(2023,10,18)" year="2023" month="11" @select-date="(date)=> selectedDate = date"/>
+<!--    <VDatepicker :min="new Date(2023,10,18)" year="2023" month="11" @select-date="(date)=> selectedDate = date"/>-->
+    <VDatepicker year="2023" month="11" @select-date="(date)=> selectedDate = date"/>
     <br/>
     <div>
         selected Date: {{ selectedDate }}
