@@ -5,8 +5,8 @@
     <div v-if="!showPopup"
          class="datepicker__popup">
         <div class="datepicker__nationality" @click="handleNationality">
-            تقویم
-            {{ direction === 'rtl' ? 'میلادی ' : 'شمسی' }}
+            {{ $t('Calendar') }}
+            {{ direction === 'rtl' ? $t('Jalali') : $t('Gregorian') }}
         </div>
         <div class="header">
             <div class="header__arrow" @click="handleArrowMonth(e,'next')"> &lt;</div>
