@@ -12,7 +12,7 @@
     <VPagination
         :model-value="page"
         :total="itemsLength"
-        itemsPerPage="10"
+        :itemsPerPage="itemsPerPage"
         @update:model-value="updatePage"
     />
 </template>
@@ -50,7 +50,11 @@
             isLoading: {
                 type: Boolean,
                 default: false
-            }
+            },
+            itemsPerPage: {
+                type: Number,
+                default: 10
+            },
         },
 
         emits: ['update:page'],
