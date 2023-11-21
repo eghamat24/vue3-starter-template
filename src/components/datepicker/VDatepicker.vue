@@ -1,7 +1,7 @@
 <template>
 <div class="datepicker" tabindex="0" @blur="initShowPopup(false)">
     <!--<input type="text" tabindex="0" class="form-control" @click="initShowPopup"/>-->
-    <div class="datepicker__input" @click="initShowPopup">{{ selectedDate }}</div>
+    <div class="datepicker__input" @click="initShowPopup">{{ $props.selected }}</div>
     <div v-if="showPopup"
          class="datepicker__popup">
         <div class="datepicker__nationality" @click="handleNationality">
@@ -36,7 +36,7 @@
 
 <script>
 
-import {ref} from "vue";
+import {ref, watch} from "vue";
 import moment from "moment-jalaali";
 import WeekDays from "@/enums/WeekDays";
 import Pasoonate from "pasoonate/dist/Pasoonate";
@@ -45,6 +45,10 @@ export default {
     name: 'VDatepicker',
 
     props: {
+        selected: {
+            type: Date,
+            default: ''
+        },
         min: {
             type: Date,
             default: ''
@@ -160,7 +164,8 @@ export default {
                         _dayArr[i - 1].push({
                             id: _day,
                             text: _day.toString(),
-                            active: (_day === data.currentDay && data.liveMonth === data.monthNumber),
+                            // active: (_day === data.currentDay && data.liveMonth === data.monthNumber),
+                            active: handleActiveDay(_day,data),
                             sameDay: (_day === data.currentDay),
                             disable: handleDisableDay(data, _day),
                             month: data.monthNumber,
@@ -180,6 +185,7 @@ export default {
             dayArr.value = _dayArr;
         };
 
+
         // برای هندل کردن روزای خارج از محدوده(فعلا برای جلالی کار نمیکنه)
         const handleDisableDay = function (data, _day) {
             let date = new Date(data.yearNumber, data.monthNumber - 1, _day);
@@ -190,6 +196,12 @@ export default {
             if (typeof max.value == "object" && date >= max.value)
                 return true;
             return false;
+        };
+
+        // برای هندل کردن روزای خارج از محدوده(فعلا برای جلالی کار نمیکنه)
+        const handleActiveDay = function (_day,data) {
+            const _splitDate = props.selected.split('/');
+            return (_day == _splitDate[2] && data.monthNumber == _splitDate[1] && _day == _splitDate[2])
         };
 
         // ایونت های ماه قبل و ماه بعد رو هندل میکنه
@@ -214,10 +226,15 @@ export default {
         const handleSelectDay = function (cel = null) {
             if (!cel.disable && cel.id) {
                 showPopup.value = false;
-                selectedDate.value = `${cel?.month}/${cel?.text}/${cel?.year}`;
-                emit('selectDate', selectedDate.value);
+                selectedDate.value = `${cel?.year}/${cel?.month}/${cel?.text}`;
+                emit('update:selected', selectedDate.value);
             }
         }
+
+        // تاریخ از بیرون اگه ست بشه، نگاه میکنه و روز انتخاب شده رو در تقویم نمایش میده
+        watch(() => props.selected, () => {
+            initDatepicker()
+        });
 
         // ایونت تبدیل تاریخ رو هندل میکنه
         const handleNationality = function () {
