@@ -13,20 +13,19 @@
 
 <main>
     <h1>{{ $t('Login') }}</h1>
-<!--    <VDatepicker :min="new Date(2023,10,18)" year="2023" month="11" @select-date="(date)=> selectedDate = date"/>-->
-    <VDatepicker year="2023" month="11" @select-date="(date)=> selectedDate = date"/>
+    <div class="btn btn-info" @click="()=>selectedDate='2023/11/5'">set 2023 Nov 5</div>
+    <!--    <VDatepicker :min="new Date(2023,10,18)" year="2023" month="11" @select-date="(date)=> selectedDate = date"/>-->
+    <VDatepicker year="2023" month="11" v-model:selected="selectedDate" @select-date="(date)=> selectedDate = date"/>
     <br/>
-    <div>
-        selected Date: {{ selectedDate }}
-
-    </div>
+    <div>selected Date: {{ selectedDate }}</div>
 </main>
 </template>
 <script setup>
 import VDatepicker from "@/components/datepicker/VDatepicker.vue";
 import {ref} from "vue";
+import Pasoonate from "pasoonate/dist/Pasoonate";
 
-const selectedDate = ref('');
+const selectedDate = ref(Pasoonate.make().gregorian().format('yyyy/M/dd'));
 
 
 </script>
