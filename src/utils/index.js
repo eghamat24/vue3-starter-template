@@ -1,4 +1,4 @@
-import {reflow, executeAfterTransition} from 'bootstrap/js/src/util';
+import { reflow, executeAfterTransition } from 'bootstrap/js/src/util';
 
 function isEmptyObject(value) {
     for (const property in value) {
@@ -11,7 +11,7 @@ function isEmptyObject(value) {
 }
 
 function isWritableFormElement(type) {
-    return /^(?:text|email|number|search|tel|url|password)$/i.test(type)
+    return /^(?:text|email|number|search|tel|url|password)$/i.test(type);
 }
 
 let uniqueIdCount = 0;
