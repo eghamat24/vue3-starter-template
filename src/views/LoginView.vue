@@ -13,11 +13,11 @@
 
 <main>
     <h1>{{ $t('Login') }}</h1>
-    <div class="btn btn-info" @click="()=>selectedDate='2023/11/5'">set 2023 Nov 5</div>
+    <div class="btn btn-info" @click="()=>selectedDate='2023/11/5'">Set 2023 Nov 5</div>
+    <div>{{ selectedDate }}</div>
     <!--    <VDatepicker :min="new Date(2023,10,18)" year="2023" month="11" @select-date="(date)=> selectedDate = date"/>-->
-    <VDatepicker year="2023" month="11" v-model:selected="selectedDate" @select-date="(date)=> selectedDate = date"/>
+    <VDatepicker year="2023" month="11" v-model:selected="selectedDate"/>
     <br/>
-    <div>selected Date: {{ selectedDate }}</div>
 </main>
 </template>
 <script setup>
