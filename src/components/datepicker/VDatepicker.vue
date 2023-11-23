@@ -2,7 +2,7 @@
 <div class="datepicker" tabindex="0" @blur="initShowPopup(false)">
     <!--<input type="text" tabindex="0" class="form-control" @click="initShowPopup"/>-->
     <div class="datepicker__input" @click="initShowPopup">{{ $props.selected }}</div>
-    <div v-if="!showPopup"
+    <div v-if="showPopup"
          class="datepicker__popup">
         <div class="datepicker__nationality" @click="handleNationality">
             {{ $t('Calendar') }}
