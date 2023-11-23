@@ -2,7 +2,7 @@
 <div class="datepicker" tabindex="0" @blur="initShowPopup(false)">
     <!--<input type="text" tabindex="0" class="form-control" @click="initShowPopup"/>-->
     <div class="datepicker__input" @click="initShowPopup">{{ $props.selected }}</div>
-    <div v-if="showPopup"
+    <div v-if="!showPopup"
          class="datepicker__popup">
         <div class="datepicker__nationality" @click="handleNationality">
             {{ $t('Calendar') }}
@@ -80,7 +80,7 @@ export default {
         let month = ref(props.month);
         let year = ref(props.year);
         let showPopup = ref(false);
-        let selectedDate = ref(new Date().toLocaleString('en-us', {year: "numeric", month: "numeric", day: "numeric"}));
+        //let selectedDate = ref(new Date().toLocaleString('en-us', {year: "numeric", month: "numeric", day: "numeric"}));
         let direction = ref('ltr');
         let weekdays = ref(WeekDays.gregorian);
         let min = ref(props.min);
@@ -129,13 +129,13 @@ export default {
                     currentDay = +Pasoonate.make().jalali().format('d');
                     monthNumber = +pasoonatedSelectedDate.jalali().format('M');
                     yearNumber = +pasoonatedSelectedDate.jalali().format('yyyy');
-                    selectedDate.value = `${yearNumber}/${monthNumber}/${currentDay}`;
+                    //selectedDate.value = `${yearNumber}/${monthNumber}/${currentDay}`;
                     break;
                 case 'ltr':
                     weekdays.value = WeekDays.gregorian;
                     firstDayIndex = weekdays.value.indexOf(firstDayName);
                     totalDays = monthDays + firstDayIndex;
-                    selectedDate.value = `${yearNumber}/${monthNumber}/${currentDay}`;
+                    //selectedDate.value = `${yearNumber}/${monthNumber}/${currentDay}`;
                     break;
             }
             return {
@@ -226,8 +226,8 @@ export default {
         const handleSelectDay = function (cel = null) {
             if (!cel.disable && cel.id) {
                 showPopup.value = false;
-                selectedDate.value = `${cel?.year}/${cel?.month}/${cel?.text}`;
-                emit('update:selected', selectedDate.value);
+                // selectedDate.value = `${cel?.year}/${cel?.month}/${cel?.text}`;
+                emit('update:selected', `${cel?.year}/${cel?.month}/${cel?.text}`);
             }
         }
 
@@ -244,7 +244,7 @@ export default {
 
         return {
             currentDateHeader,
-            selectedDate,
+            // selectedDate,
             showPopup,
             dayArr,
             weekdays,
