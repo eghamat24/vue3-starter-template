@@ -116,6 +116,23 @@ export default {
                         dropdownMenu.value.style.top = rect.top + window.scrollY - dropdownMenu.value.clientHeight + 'px';
                         if (LanguageService.isRtl()) {
                             dropdownMenu.value.style.left = rect.left + 'px';
+                            dropdown = dropdownMenu.value.getBoundingClientRect();
+
+
+                            console.log('dropdown.height + dropdown.top::', dropdown.height + dropdown.top)
+                            console.log('vpHeight:::', vpHeight)
+                            console.log('rect:::', rect);
+
+
+                            if ((dropdown.width + dropdown.left) > vpWidth) {
+                                dropdownMenu.value.style.right = activatorContainer.value.clientWidth + 'px';
+                                dropdownMenu.value.style.left = 'initial';
+                            }
+                            if (dropdown.top < 0) {
+                                dropdownMenu.value.style.bottom = 'initial';
+                                dropdownMenu.value.style.top = rect.top + 20 + 'px';
+                            }
+
                         } else {
                             dropdownMenu.value.style.left = rect.left - activatorContainer.value.clientWidth - activatorContainer.value.clientWidth + 'px';
                         }
@@ -128,12 +145,13 @@ export default {
 
                             dropdown = dropdownMenu.value.getBoundingClientRect();
                             if ((dropdown.width + dropdown.left) > vpWidth) {
-                                dropdownMenu.value.style.right = activatorContainer.value.clientWidth  + 'px';
+                                dropdownMenu.value.style.right = activatorContainer.value.clientWidth + 'px';
                                 dropdownMenu.value.style.left = 'initial';
                             }
+
                             if ((dropdown.height + dropdown.top) > vpHeight) {
                                 dropdownMenu.value.style.top = 'initial';
-                                dropdownMenu.value.style.bottom = '0px';
+                                dropdownMenu.value.style.bottom = vpHeight - rect.top + 'px';
                             }
 
                         } else {
@@ -144,9 +162,22 @@ export default {
 
                     case ComponentPosition.START:
                         dropdownMenu.value.style.top = rect.top + window.scrollY + 'px';
+                        dropdown = dropdownMenu.value.getBoundingClientRect();
 
                         if (LanguageService.isRtl()) {
                             dropdownMenu.value.style.left = rect.left + rect.width + 10 + 'px';
+
+                            if (dropdown.top < 0) {
+                                dropdownMenu.value.style.bottom = 'initial';
+                                dropdownMenu.value.style.top = rect.top + 20 + 'px';
+                            }
+
+                            if ((dropdown.height + dropdown.top) > vpHeight) {
+                                dropdownMenu.value.style.top = 'initial';
+                                dropdownMenu.value.style.bottom = vpHeight - rect.top + 'px';
+                            }
+
+
                         } else {
                             dropdownMenu.value.style.left = rect.left + 'px';
                         }
@@ -155,9 +186,21 @@ export default {
 
                     case ComponentPosition.END:
                         dropdownMenu.value.style.top = rect.top + window.scrollY + 'px';
+                        dropdown = dropdownMenu.value.getBoundingClientRect();
 
                         if (LanguageService.isRtl()) {
                             dropdownMenu.value.style.left = rect.left - dropdownMenu.value.clientWidth + 'px';
+
+                            if (dropdown.top < 0) {
+                                dropdownMenu.value.style.bottom = 'initial';
+                                dropdownMenu.value.style.top = rect.top + 20 + 'px';
+                            }
+
+                            if ((dropdown.height + dropdown.top) > vpHeight) {
+                                dropdownMenu.value.style.top = 'initial';
+                                dropdownMenu.value.style.bottom = vpHeight - rect.top + 'px';
+                            }
+
                         } else {
                             dropdownMenu.value.style.left = rect.left + rect.width + 'px';
                         }
