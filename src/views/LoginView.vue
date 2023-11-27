@@ -15,21 +15,42 @@
     <h1>{{ $t('Login') }}</h1>
 
 
-    <VDropdown position="bottom">
-        <template #activator="{on}">
-            <div v-on="on">test</div>
-        </template>
-        <template #default>
-            <div>menu1</div>
-            <div>menu2</div>
-            <div>menu3</div>
-            <div>menu4</div>
-            <div>menu5</div>
-            <div>menu6</div>
-            <div>menu7</div>
-        </template>
-    </VDropdown>
+    <br/>
+    <br/>
+    <br/>
 
+    <br/>
+    <br/>
+    <br/>
+
+    <br/>
+    <br/>
+    <br/>
+
+    <br/>
+    <br/>
+    <br/>
+
+    <br/>
+    <br/>
+    <br/>
+
+    <div style="margin-right: 300px">
+        <VDropdown position="bottom">
+            <template #activator="{on}">
+                <div v-on="on">test</div>
+            </template>
+            <template #default>
+                <div>menu example 1</div>
+                <div>menu example 2</div>
+                <div>menu example 3</div>
+                <div>menu example 4</div>
+                <div>menu example 5</div>
+                <div>menu example 6</div>
+                <div>menu example 7</div>
+            </template>
+        </VDropdown>
+    </div>
 
     <!--    <div class="btn btn-info" @click="()=>selectedDate='2023/11/5'">Set 2023 Nov 5</div>-->
     <!--    <div>{{ selectedDate }}</div>-->

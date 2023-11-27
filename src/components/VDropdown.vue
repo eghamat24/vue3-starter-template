@@ -118,12 +118,6 @@ export default {
                             dropdownMenu.value.style.left = rect.left + 'px';
                             dropdown = dropdownMenu.value.getBoundingClientRect();
 
-
-                            console.log('dropdown.height + dropdown.top::', dropdown.height + dropdown.top)
-                            console.log('vpHeight:::', vpHeight)
-                            console.log('rect:::', rect);
-
-
                             if ((dropdown.width + dropdown.left) > vpWidth) {
                                 dropdownMenu.value.style.right = activatorContainer.value.clientWidth + 'px';
                                 dropdownMenu.value.style.left = 'initial';
