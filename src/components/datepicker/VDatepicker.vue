@@ -2,11 +2,10 @@
 <div class="datepicker" tabindex="0" @blur="initShowPopup(false)">
     <!--<input type="text" tabindex="0" class="form-control" @click="initShowPopup"/>-->
     <div class="datepicker__input" @click="initShowPopup">{{ $props.selected }}</div>
-    <div v-if="showPopup"
+    <div v-if="!showPopup"
          class="datepicker__popup">
-        <div class="datepicker__nationality" @click="handleNationality">
-            {{ $t('Calendar') }}
-            {{ direction === 'rtl' ? $t('Jalali') : $t('Gregorian') }}
+        <div class="datepicker__nationality" @click="handleNationality">{{ $t('Calendar') }}
+            {{ calendarType === 'jalali' ? $t('Jalali') : $t('Gregorian') }}
         </div>
         <div class="header">
             <div class="header__arrow" @click="handleArrowMonth(e,'next')"> &lt;</div>
@@ -40,6 +39,7 @@ import {ref, watch} from "vue";
 import moment from "moment-jalaali";
 import WeekDays from "@/enums/WeekDays";
 import Pasoonate from "pasoonate/dist/Pasoonate";
+import CalendarType from "@/enums/CalendarType";
 
 export default {
     name: 'VDatepicker',
@@ -47,15 +47,15 @@ export default {
     props: {
         selected: {
             type: Date,
-            default: ''
+            default: null
         },
         min: {
             type: Date,
-            default: ''
+            default: null
         },
         max: {
             type: Date,
-            default: ''
+            default: null
         },
         year: {
             type: Number,
@@ -80,16 +80,15 @@ export default {
         let month = ref(props.month);
         let year = ref(props.year);
         let showPopup = ref(false);
-        //let selectedDate = ref(new Date().toLocaleString('en-us', {year: "numeric", month: "numeric", day: "numeric"}));
-        let direction = ref('ltr');
-        let weekdays = ref(WeekDays.gregorian);
+        let direction = ref('rtl');
+        let calendarType = ref(CalendarType.JALALI);
+        let weekdays = ref(WeekDays.jalali);
         let min = ref(props.min);
         let max = ref(props.max);
 
 
         // دیتای لازم برای حلقه های ایجاد کننده سطر و ستون های تقویم رو آماده میکنه
-        const calculateDate = function (direction, data = {}) {
-            const type = direction;
+        const calculateDate = function (type, data = {}) {
             const gregorianSelectedDate = new Date(data.year, data.month, 0);
             const gregorianSelectedDateTimeStamp = +new Date(gregorianSelectedDate) / 1000; // per second
             const pasoonatedSelectedDate = Pasoonate.make(gregorianSelectedDateTimeStamp);
@@ -115,7 +114,7 @@ export default {
             ${new Date(year.value, month.value, 0).toLocaleString('default', {year: 'numeric'})}`
 
             switch (type) {
-                case 'rtl':
+                case CalendarType.JALALI:
                     liveMonth = +liveJalali.format('M');
                     weekdays.value = WeekDays.jalali;
                     let _firstDayJalali = +moment(firstDay).format('jD');
@@ -129,17 +128,18 @@ export default {
                     currentDay = +Pasoonate.make().jalali().format('d');
                     monthNumber = +pasoonatedSelectedDate.jalali().format('M');
                     yearNumber = +pasoonatedSelectedDate.jalali().format('yyyy');
-                    //selectedDate.value = `${yearNumber}/${monthNumber}/${currentDay}`;
+                    direction.value = 'rtl';
                     break;
-                case 'ltr':
+                case CalendarType.GREGORIAN:
                     weekdays.value = WeekDays.gregorian;
                     firstDayIndex = weekdays.value.indexOf(firstDayName);
                     totalDays = monthDays + firstDayIndex;
-                    //selectedDate.value = `${yearNumber}/${monthNumber}/${currentDay}`;
+                    direction.value = 'ltr';
                     break;
             }
             return {
-                direction: type,
+                direction: direction.value,
+                calendarType: type,
                 maxRows: maxRows,
                 weekdays: weekdays,
                 firstDayIndex: firstDayIndex,
@@ -153,7 +153,7 @@ export default {
 
         // خروجی لازم برای سطرها و ستون های تقویم رو آماده میکنه(در قالب یک آرایه دو بعدی)
         const initDatepicker = function () {
-            const data = calculateDate(direction.value, {year: year.value, month: month.value, day: 0});
+            const data = calculateDate(calendarType.value, {year: year.value, month: month.value, day: 0});
             const _dayArr = [];
             let day = 1;
             for (let i = 1; i <= data.maxRows; i++) {
@@ -164,8 +164,7 @@ export default {
                         _dayArr[i - 1].push({
                             id: _day,
                             text: _day.toString(),
-                            // active: (_day === data.currentDay && data.liveMonth === data.monthNumber),
-                            active: handleActiveDay(_day,data),
+                            active: handleActiveDay(_day, data),
                             sameDay: (_day === data.currentDay),
                             disable: handleDisableDay(data, _day),
                             month: data.monthNumber,
@@ -189,17 +188,17 @@ export default {
         // برای هندل کردن روزای خارج از محدوده(فعلا برای جلالی کار نمیکنه)
         const handleDisableDay = function (data, _day) {
             let date = new Date(data.yearNumber, data.monthNumber - 1, _day);
-            if (direction.value === 'rtl')
+            if (calendarType.value === CalendarType.JALALI)
                 date = Pasoonate.make(date);
-            if (typeof min.value == "object" && (date <= min.value))
+            if (min.value !== null && date <= min.value)
                 return true;
-            if (typeof max.value == "object" && date >= max.value)
+            if (max.value !== null && date >= max.value)
                 return true;
             return false;
         };
 
         // برای هندل کردن روزای خارج از محدوده(فعلا برای جلالی کار نمیکنه)
-        const handleActiveDay = function (_day,data) {
+        const handleActiveDay = function (_day, data) {
             const _splitDate = props.selected.split('/');
             return (_day == _splitDate[2] && data.monthNumber == _splitDate[1] && _day == _splitDate[2])
         };
@@ -226,7 +225,6 @@ export default {
         const handleSelectDay = function (cel = null) {
             if (!cel.disable && cel.id) {
                 showPopup.value = false;
-                // selectedDate.value = `${cel?.year}/${cel?.month}/${cel?.text}`;
                 emit('update:selected', `${cel?.year}/${cel?.month}/${cel?.text}`);
             }
         }
@@ -238,17 +236,17 @@ export default {
 
         // ایونت تبدیل تاریخ رو هندل میکنه
         const handleNationality = function () {
-            direction.value = (direction.value === 'rtl') ? 'ltr' : 'rtl';
+            calendarType.value = (calendarType.value === CalendarType.GREGORIAN) ? CalendarType.JALALI : CalendarType.GREGORIAN;
             initDatepicker();
         }
 
         return {
             currentDateHeader,
-            // selectedDate,
             showPopup,
             dayArr,
             weekdays,
             direction,
+            calendarType,
             handleNationality,
             handleArrowMonth,
             handleSelectDay,
