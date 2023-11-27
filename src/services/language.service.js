@@ -21,7 +21,7 @@ class LanguageService {
      * @returns {String}
      */
     static get DEFAULT() {
-        return 'en';
+        return 'fa';
     }
 
     /**
