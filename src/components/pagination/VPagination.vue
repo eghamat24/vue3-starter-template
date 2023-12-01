@@ -1,9 +1,16 @@
 <template>
     <div class="input-group">
         <button
+            class="btn text-secondary-dark align-items-center d-flex"
+            @click="goFirst"
+        >
+            go first
+        </button>
+        <button
             class="btn btn-outline-primary"
             @click="goPrev"
-        >{{ $t('Previous') }}</button>
+        >{{ $t('Previous') }}
+        </button>
 
         <input
             :value="modelValue"
@@ -15,7 +22,14 @@
         <button
             class="btn btn-outline-primary"
             @click="goNext"
-        >{{ $t('Next') }}</button>
+        >{{ $t('Next') }}
+        </button>
+        <button
+            class="btn text-primary  align-items-center d-flex"
+            @click="goLast"
+        >
+            go last
+        </button>
     </div>
 </template>
 
@@ -31,6 +45,10 @@ export default {
         total: {
             type: Number,
             required: true
+        },
+        itemsPerPage: {
+            type: Number,
+            required: true
         }
     },
 
@@ -38,14 +56,17 @@ export default {
 
     setup(props, context) {
         function updateValue(value) {
-            if (value < 1) {
-                value = 1;
-            }
+            if (value > Math.floor(props.total / props.itemsPerPage)) {
+                value = Math.ceil(props.total / props.itemsPerPage)
+            } else {
+                if (value < 1) {
+                    value = 1;
+                }
 
-            if (value > props.total) {
-                value = props.total;
+                if (value > props.total) {
+                    value = props.total;
+                }
             }
-
             context.emit('update:modelValue', value);
         }
 
@@ -57,10 +78,20 @@ export default {
             updateValue(props.modelValue - 1);
         }
 
+        function goFirst() {
+            updateValue(props.modelValue - props.modelValue + 1);
+        }
+
+        function goLast() {
+            updateValue(Math.ceil(props.total / props.itemsPerPage));
+        }
+
         return {
             updateValue,
             goPrev,
-            goNext
+            goNext,
+            goFirst,
+            goLast
         };
     }
 }
