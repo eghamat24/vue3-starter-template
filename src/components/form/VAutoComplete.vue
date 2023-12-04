@@ -67,6 +67,9 @@
             modelValue: {
                 default: null
             },
+            autocomplete: {
+                default: true,
+            },
             id: {
                 type: String,
                 default: () => getUniqueId()
@@ -175,7 +178,7 @@
 
             const search = ref('');
             const filteredItems = computed(() => {
-                if (search.value.length === 0) {
+                if (!search.value || !props.autocomplete) {
                     return props.items;
                 }
 
