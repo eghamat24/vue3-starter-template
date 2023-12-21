@@ -1,0 +1,26 @@
+.date-picker {
+  $self: &;
+  position: relative;
+  overflow: hidden;
+
+  &__slider {
+    --month-basis: 100%;
+    --n-month-basis: calc(-1 * var(--month-basis));
+    display: flex;
+    flex-wrap: nowrap;
+    margin: 0 -1.875rem;
+
+    &--slide {
+      transform: translateX(var(--n-month-basis)) #{"/*! rtl:translateX(var(--month-basis)) */"};
+    }
+
+    &--moving {
+      transition: transform 200ms ease-out;
+    }
+  }
+
+  &__month {
+    flex: 1 0 var(--month-basis);
+    padding: 0 1.875rem;
+  }
+}

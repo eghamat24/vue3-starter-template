@@ -2,7 +2,7 @@
     <div class="dropdown">
         <div
             ref="activatorContainer"
-            class="dropdown-activator"
+            class="dropdown-activator d-inline-block"
         >
             <slot
                 :on="listeners"
@@ -11,16 +11,15 @@
             ></slot>
         </div>
 
-
         <Teleport to="body">
             <div
+                v-if="isShown"
                 ref="dropdownMenu"
                 :class="dropdownMenuClassNames"
             >
                 <slot :hide="hide"></slot>
             </div>
         </Teleport>
-
     </div>
 </template>
 
@@ -45,8 +44,7 @@
                 type: String,
                 default: ComponentPosition.BOTTOM,
                 validator(value) {
-                    return Object.values(ComponentPosition).includes
-                    (value);
+                    return Object.values(ComponentPosition).includes(value);
                 }
             },
             trigger: {
