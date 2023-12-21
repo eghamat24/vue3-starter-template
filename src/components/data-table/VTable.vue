@@ -1,25 +1,31 @@
 <template>
     <table class="table table-bordered">
         <VTableHeader :columns="columns"/>
-        <VTableBody :columns="columns" :items="paginatedItems"/>
+        <VTableBody
+            :columns="columns"
+            :row-slot="rowSlot"
+            :items="paginatedItems"
+            :is-loading="isLoading"
+        />
     </table>
 
     <VPagination
         :model-value="page"
         @update:model-value="updatePage"
         :total="items.length"
+        :itemsPerPage="itemsPerPage"
     />
 </template>
 
 <script>
-import { computed } from 'vue';
+    import { computed } from 'vue';
 
-// Components
-import VTableHeader from '@/components/data-table/VTableHeader.vue';
-import VTableBody from '@/components/data-table/VTableBody.vue';
-import VPagination from '@/components/pagination/VPagination.vue';
+    // Components
+    import VTableHeader from '@/components/data-table/VTableHeader.vue';
+    import VTableBody from '@/components/data-table/VTableBody.vue';
+    import VPagination from '@/components/pagination/VPagination.vue';
 
-export default {
+    export default {
     name: 'VTable',
 
     components: {
@@ -50,6 +56,7 @@ export default {
     emits: ['update:page', 'update:itemsPerPage'],
 
     setup(props, context) {
+        const rowSlot = computed(() => context.slots.row);
         const columns = computed(() => context.slots.default());
 
         function updatePage(value) {
@@ -68,6 +75,7 @@ export default {
 
             paginatedItems,
 
+            rowSlot,
             columns
         };
     }

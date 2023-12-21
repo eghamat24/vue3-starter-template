@@ -1,0 +1,13 @@
+.table {
+  &__loading {
+    height: 50px;
+    border: none;
+
+    td {
+      border: none;
+      position: absolute;
+      right: 50%;
+    }
+
+  }
+}
