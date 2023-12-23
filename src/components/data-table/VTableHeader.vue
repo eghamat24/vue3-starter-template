@@ -15,7 +15,7 @@
 
 <script>
 // Utils
-import { hasVNodeSlot } from '@/utils';
+import { hasVNodeSlot } from '@/utils/vue';
 
 export default {
     name: 'VTableHeader',

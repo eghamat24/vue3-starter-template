@@ -41,7 +41,7 @@
     import { h } from 'vue';
 
     // Utils
-    import { hasVNodeSlot } from '@/utils';
+    import { hasVNodeSlot } from '@/utils/vue';
 
     export default {
         name: 'VTableBody',
