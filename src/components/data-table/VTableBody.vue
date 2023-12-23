@@ -1,55 +1,104 @@
 <template>
     <tbody>
-        <tr v-for="(item, itemIndex) of items" :key="itemIndex">
-            <td v-for="(column, columnIndex) of columns" :key="columnIndex">
-                <component
-                    v-if="hasVNodeSlot(column, 'body')"
-                    :is="column.children.body"
-                    :item="item"
-                    :field="column.props.field"
-                ></component>
+    <tr v-if="isLoading" class="table__loading">
+        <td :colspan="columns.length">
+            <span class="spinner-border text-primary"></span>
+        </td>
+    </tr>
 
-                <template v-else>{{ resolveField(column, item) }}</template>
-            </td>
+    <tr v-else-if="items.length === 0" class="text-center">
+        <td :colspan="columns.length" class="text-mute">{{ $t('No data available') }}</td>
+    </tr>
+
+    <template v-else-if="rowSlot">
+        <component
+            :is="rowSlot"
+            v-for="(item, rowIndex) of items"
+            :key="rowIndex"
+            :columns="renderColumns(item ,rowIndex)"
+            :item="item"
+            :rowIndex="rowIndex"
+        />
+    </template>
+
+    <template v-else>
+        <tr
+            v-for="(item, rowIndex) of items"
+            :key="rowIndex"
+        >
+            <component
+                :is="column"
+                v-for="(column, index) of renderColumns(item ,rowIndex)"
+                :key="index"
+            />
         </tr>
+    </template>
+
     </tbody>
 </template>
 
 <script>
-// Utils
-import { hasVNodeSlot } from '@/utils';
+    import { h } from 'vue';
 
-export default {
-    name: 'VTableBody',
+    // Utils
+    import { hasVNodeSlot } from '@/utils';
 
-    props: {
-        columns: {
-            type: Array,
-            required: true
+    export default {
+        name: 'VTableBody',
+
+        props: {
+            columns: {
+                type: Array,
+                required: true
+            },
+            items: {
+                type: Array,
+                required: true
+            },
+            rowSlot: {
+                type: Function
+            },
+            isLoading: {
+                type: Boolean,
+                default: false
+            }
         },
-        items: {
-            type: Array,
-            required: true
-        }
-    },
 
-    setup() {
-        function resolveField(column, item) {
-            if (column.props.field === null) {
-                return item;
+        setup(props) {
+
+            function renderColumns(item, rowIndex) {
+                return props.columns.map(function (column) {
+                    let content;
+
+                    if (hasVNodeSlot(column, 'body')) {
+                        content = h(column.children.body, { field: column.props.field, item, rowIndex });
+                    } else {
+                        content = resolveField(column, item);
+                    }
+
+                    return h(
+                        "td",
+                        { class: "bg-transparent" },
+                        content
+                    );
+                });
             }
 
-            if (typeof column.props.field === 'string') {
-                return item[column.props.field];
+            function resolveField(column, item) {
+                if (column.props.field === null) {
+                    return item;
+                }
+
+                if (typeof column.props.field === 'string') {
+                    return item[column.props.field];
+                }
+
+                return column.props.field(item);
             }
 
-            return column.props.field(item);
+            return {
+                renderColumns
+            };
         }
-
-        return {
-            hasVNodeSlot,
-            resolveField
-        };
-    }
-}
+    };
 </script>
