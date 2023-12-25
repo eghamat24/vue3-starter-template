@@ -31,7 +31,7 @@ class PermissionService {
     }
 
     /**
-     * Determine if has a permission
+     * Determine if it has a permission
      *
      * @param {String} name
      * @returns {Boolean}
@@ -41,7 +41,7 @@ class PermissionService {
     }
 
     /**
-     * Determine if has all of the requested permissions
+     * Determine if it has all the requested permissions
      *
      * @param {String[]} names
      * @returns {Boolean}
@@ -51,7 +51,7 @@ class PermissionService {
     }
 
     /**
-     * Determine if has any of the requested permissions
+     * Determine if it has any of the requested permissions
      *
      * @param {String[]} names
      * @returns {Boolean}
