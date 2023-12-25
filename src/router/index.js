@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 
 import AuthenticateRoute from './middleware/AuthenticateRoute';
 import AuthorizeRoute from './middleware/AuthorizeRoute';
+import RedirectIfAuthenticated from './middleware/RedirectIfAuthenticated';
 
 import PanelView from '@/views/PanelView.vue';
 
@@ -31,7 +32,8 @@ const router = createRouter({
             // route level code-splitting
             // this generates a separate chunk (Login.[hash].js) for this route
             // which is lazy-loaded when the route is visited.
-            component: () => import('@/views/LoginView.vue')
+            component: () => import('@/views/LoginView.vue'),
+            beforeEnter: [RedirectIfAuthenticated]
         }
     ]
 });
