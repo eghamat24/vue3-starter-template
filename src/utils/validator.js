@@ -94,7 +94,7 @@ class Validator {
     static required(message) {
         return function(value) {
             if (value === null || value === undefined || value === '') {
-                return message || t('Validation error message');
+                return message || t('This field is required!');
             }
 
             return true;
