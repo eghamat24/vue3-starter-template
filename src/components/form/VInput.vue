@@ -1,12 +1,10 @@
 <template>
-    <label v-if="$slots.label" class="fd-form-label" :for="id">
+    <label v-if="$slots.label" class="form-label" :for="id">
         <slot name="label"></slot>
     </label>
 
-    <div :class="inputGroupClassNames">
-        <span v-if="$slots.prepend" class="fd-input-group__addon">
-            <slot name="prepend"></slot>
-        </span>
+    <div class="input-group has-validation">
+        <slot name="prepend"></slot>
 
         <input
             :value="modelValue"
@@ -16,18 +14,16 @@
             :type="type"
             :placeholder="placeholder"
             :disabled="disabled"
-            class="fd-input fd-input-group__input"
+            :class="inputClassNames"
         />
 
-        <span v-if="$slots.append" class="fd-input-group__addon">
-            <slot name="append"></slot>
-        </span>
-    </div>
+        <slot name="append"></slot>
 
-    <div
-        v-if="errors.length !== 0"
-        class="fd-form-message fd-form-message--error"
-    >{{ errors[0] }}</div>
+        <div
+            v-if="errors.length !== 0"
+            class="invalid-feedback"
+        >{{ errors[0] }}</div>
+    </div>
 </template>
 
 <script>
@@ -84,15 +80,11 @@ export default {
         const registrationId = formProvider.register({ validate, resetValidation });
         onUnmounted(() => formProvider.unregister(registrationId));
 
-        const inputGroupClassNames = computed(() => {
-            const classNames = ['fd-input-group'];
-
-            if (props.disabled === true) {
-                classNames.push('is-disabled');
-            }
+        const inputClassNames = computed(() => {
+            const classNames = ['form-control'];
 
             if (isValid.value === false) {
-                classNames.push('is-error');
+                classNames.push('is-invalid');
             }
 
             return classNames;
@@ -106,7 +98,7 @@ export default {
             errors,
             validate,
 
-            inputGroupClassNames,
+            inputClassNames,
 
             handleInput
         };
