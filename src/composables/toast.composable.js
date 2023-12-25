@@ -16,7 +16,7 @@ export function installToast() {
 }
 
 export function useToast() {
-    function showToast({ body, theme, duration = 5000, clearable = false , title}) {
+    function showToast({ body, theme, duration = 5000, clearable = true , title}) {
         const id = getUniqueId();
 
         const _timeOutId = setTimeout(function () {
