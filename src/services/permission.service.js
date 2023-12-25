@@ -47,7 +47,7 @@ class PermissionService {
      * @returns {Boolean}
      */
     static hasAll(names) {
-        return names.every(this.has);
+        return names.every((name) => this.has(name));
     }
 
     /**
@@ -57,7 +57,7 @@ class PermissionService {
      * @returns {Boolean}
      */
     static hasAny(names) {
-        return names.some(this.has);
+        return names.some((name) => this.has(name));
     }
 
     /**
