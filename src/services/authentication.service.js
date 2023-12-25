@@ -11,9 +11,13 @@ class AuthenticationService {
      * @returns {Promise<AxiosResponse>}
      */
     static login(data, config) {
-        return ApiService.post('login', data, config).then((response) => {
-            TokenService.set(response.data.token);
-            PermissionService.set(response.data.permissions);
+        return ApiService.post('users', data, config).then((response) => {
+            const token = btoa(JSON.stringify(response.data));
+
+            TokenService.set(token);
+            PermissionService.set(['dashboard']);
+
+            return response;
         });
     }
 
