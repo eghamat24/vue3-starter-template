@@ -1,21 +1,31 @@
 html {
-  direction: ltr;
+    //direction: ltr;
 }
 
 html, body, #app {
-  height: 100%;
-  width: 100%;
+    height: 100%;
+    width: 100%;
 }
 
 #app {
-  display: flex;
-  flex-direction: column;
+    display: flex;
+    flex-direction: column;
 }
 
 @import "bootstrap";
 
+// Variables
+@import "framework/variables";
+@import "bootstrap/scss/variables";
 
+// Mixins
+@import "mixins/scrollbar";
+
+// Components
 @import "components/autocomplete";
+@import "components/tooltip";
+@import "components/gallery-slider";
+
 @import "components/modal";
 @import "components/tooltip";
 @import "components/table";
