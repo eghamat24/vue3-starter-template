@@ -1,0 +1,503 @@
+// Color system
+$white: #fff;
+$black: #333333;
+$grey-text: #727272;
+$default-text: #AAAAAA;
+$grey-stroke: #DDDDDD;
+$light-background-grey: #F4F4F4;
+$red: #C10D0D;
+$green: #11B95F;
+$orange: #E97000;
+$blue: #37A0FB;
+
+// These bootstrap maps are only used to define CSS vars, we don't need them
+$colors: ();
+$grays: ();
+
+$primary: #FB373E;
+$secondary: $grey-text;
+$success: $green;
+$danger: $red;
+$warning: $orange;
+$info: $blue;
+
+$theme-colors: (
+  "primary": $primary,
+  "secondary": $secondary,
+  "success": $success,
+  "danger": $danger,
+  "warning": $warning,
+  "info": $info
+);
+
+$background-fade-weight: 96%;
+$background-fade-amount: 0.04;
+
+// The contrast ratio to reach against white, to determine if color changes from "light" to "dark". Acceptable values for WCAG 2.0 are 3, 4.5 and 7.
+$min-contrast-ratio: 2.0;
+
+// Options
+$enable-validation-icons: false;
+
+// Prefix for :root CSS variables
+$variable-prefix: '';
+
+// Spacing
+$spacer: 1rem;
+$spacers: (
+  0: 0,
+  1: $spacer * 0.25,
+  2: $spacer * 0.5,
+  3: $spacer * 0.75,
+  4: $spacer,
+  5: $spacer * 1.5,
+  6: $spacer * 2,
+  7: $spacer * 3
+);
+
+// Body
+$body-color: $black;
+$body-text-align: right;
+
+// Paragraphs
+$paragraph-margin-bottom: 0;
+
+// Grid breakpoints
+$grid-breakpoints: (
+  xs: 0,
+  sm: 576px,
+  md: 768px,
+  lg: 992px,
+  xl: 1200px
+);
+
+// Grid containers
+$container-max-widths: (
+  sm: 540px,
+  md: 720px,
+  lg: 960px,
+  xl: 1232px
+);
+
+// Grid columns
+$grid-gutter-width: $spacer;
+$grid-row-columns: 0;
+
+$gutters: $spacers;
+
+// Container padding
+$container-padding-x: $spacer;
+
+// Border
+$border-width: 1px;
+$border-color: $grey-stroke;
+
+// Border radius
+$border-radius: 10px;
+$border-radius-sm: 5px;
+$border-radius-lg: 15px;
+$border-radius-pill: 50rem;
+
+// Component active color
+$component-active-color: $primary;
+$component-active-bg: transparent;
+
+// Transitions
+$transition-duration-base: 150ms;
+$transition-timing-function-base: ease-out;
+
+$transition-base: all $transition-duration-base $transition-timing-function-base;
+$transition-fade: opacity $transition-duration-base $transition-timing-function-base;
+$transition-collapse: height 200ms $transition-timing-function-base;
+$transition-collapse-width: width 200ms $transition-timing-function-base;
+
+// Typography
+$font-family-sans-serif: IRANSans, sans-serif;
+
+$font-size-base: 1rem;
+
+$font-weight-normal: 400;
+$font-weight-semibold: 500;
+$font-weight-bold: 700;
+
+$line-height-base: 1.5;
+$line-height-sm: 1.25;
+$line-height-lg: 2;
+
+$font-sizes: (
+  1: $font-size-base * 0.6875,
+  2: $font-size-base * 0.75,
+  3: $font-size-base * 0.875,
+  4: $font-size-base,
+  5: $font-size-base * 1.125,
+  6: $font-size-base * 1.25
+);
+
+$text-muted: $default-text;
+
+// Hr
+$hr-margin-y: 0;
+$hr-color: $border-color;
+$hr-opacity: 1;
+
+// Buttons + Forms
+$input-btn-padding-y: 0.75rem;
+$input-btn-padding-x: 1rem;
+$input-btn-font-size: 0.875rem;
+$input-btn-line-height: 1.5rem;
+
+$input-btn-focus-width: 0;
+$input-btn-focus-box-shadow: none;
+
+$input-btn-padding-y-xs: 0.375rem;
+$input-btn-padding-x-xs: $input-btn-padding-x;
+$input-btn-font-size-xs: 0.75rem;
+
+$input-btn-padding-y-sm: 0.625rem;
+$input-btn-padding-x-sm: 0.625rem;
+
+$input-btn-padding-y-lg: 0.875rem;
+$input-btn-padding-x-lg: $input-btn-padding-x;
+$input-btn-font-size-lg: $input-btn-font-size;
+
+// Buttons
+$btn-font-size: 1rem;
+$btn-font-size-sm: $btn-font-size;
+$btn-font-size-lg: $btn-font-size;
+
+$btn-padding-y-xs: $input-btn-padding-y-xs;
+$btn-padding-x-xs: $input-btn-padding-x-xs;
+$btn-font-size-xs: 0.875rem;
+
+$btn-padding-y-xl: 1rem;
+$btn-padding-x-xl: $input-btn-padding-x;
+$btn-font-size-xl: $btn-font-size;
+
+$btn-font-weight: $font-weight-bold;
+
+$btn-disabled-opacity: 1;
+$btn-disabled-color: #ABB5BD;
+
+$btn-border-radius-xs: $border-radius;
+$btn-border-radius-sm: $border-radius;
+$btn-border-radius-lg: $border-radius;
+$btn-border-radius-xl: $border-radius;
+
+$btn-hover-bg-shade-amount: 20%;
+$btn-hover-bg-tint-amount: 20%;
+
+$btn-hover-border-shade-amount: 40%;
+$btn-hover-border-tint-amount: 40%;
+
+$btn-active-bg-shade-amount: 40%;
+$btn-active-bg-tint-amount: 40%;
+
+$btn-active-border-shade-amount: 60%;
+$btn-active-border-tint-amount: 60%;
+
+// Form text
+$form-text-margin-top: 0.25rem;
+$form-text-font-size: 0.75rem;
+$form-text-line-height: 1.25rem;
+
+// Form label
+$form-label-margin-bottom: $form-text-margin-top;
+$form-label-color: $secondary;
+
+// Form input
+$input-font-weight: $font-weight-semibold;
+
+$input-padding-y-xs: $input-btn-padding-y-xs;
+$input-padding-x-xs: $input-btn-padding-x-xs;
+$input-font-size-xs: $input-btn-font-size-xs;
+
+$input-disabled-bg: #F8F8F8;
+$input-disabled-border-color: #C7C7C7;
+
+$input-border-color: $border-color;
+
+$input-border-radius-xs: $border-radius;
+$input-border-radius-lg: $border-radius;
+
+$input-hover-border-color: $input-disabled-border-color;
+$input-hover-width: 0.5px;
+$input-hover-box-shadow: inset 0 0 0 $input-hover-width $input-hover-border-color;
+
+$input-focus-border-color: #246BAA !important;
+$input-focus-width: $input-hover-width;
+$input-focus-box-shadow: inset 0 0 0 $input-focus-width $input-focus-border-color;
+
+$input-placeholder-color: $text-muted;
+
+$input-height-inner: none;
+$input-height-inner-half: none;
+$input-height-inner-quarter: none;
+
+$input-height: auto;
+$input-height-xs: auto;
+$input-height-sm: auto;
+$input-height-lg: auto;
+
+$input-transition: none;
+
+// Form check
+$form-check-input-width: 1rem;
+$form-check-input-margin: 0.25rem;
+$form-check-padding-start: 0;
+$form-check-margin-bottom: 0;
+$form-check-label-color: $secondary;
+
+$form-check-input-border: 1.5px solid $border-color;
+$form-check-input-border-radius: $border-radius-sm;
+
+$form-check-input-checked-color: $primary;
+$form-check-input-checked-bg-image: url("data:image/svg+xml,<svg width='9' height='6' viewBox='0 0 11 9' fill='none' xmlns='http://www.w3.org/2000/svg'><path d='M1 4L4 7L10 1' stroke='#{$form-check-input-checked-color}' stroke-width='2'/></svg>");
+$form-check-input-disabled-checked-bg-image: url("data:image/svg+xml,<svg width='9' height='6' viewBox='0 0 11 9' fill='none' xmlns='http://www.w3.org/2000/svg'><path d='M1 4L4 7L10 1' stroke='#{$default-text}' stroke-width='2'/></svg>");
+
+$form-check-radio-checked-color: $white;
+$form-check-radio-checked-bg-color: $primary;
+$form-check-radio-checked-border-color: $primary;
+$form-check-radio-checked-bg-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'><circle r='1.8' fill='#{$form-check-radio-checked-color}'/></svg>");
+
+// Form switch
+$form-switch-color: $white;
+$form-switch-height: 1.25rem;
+$form-switch-width: 2.25rem;
+$form-switch-padding-start: 0;
+$form-switch-bg-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'><circle r='3.8' fill='#{$form-switch-color}'/></svg>");
+$form-switch-transition: all 200ms $transition-timing-function-base;
+
+$form-switch-focus-bg-image: $form-switch-bg-image;
+
+$form-switch-checked-bg-color: $primary;
+$form-switch-checked-bg-image: $form-switch-bg-image;
+
+// Form select
+$form-select-indicator-padding: 3rem;
+
+$form-select-disabled-color: $secondary;
+$form-select-disabled-bg: $input-disabled-bg;
+$form-select-disabled-border-color: $input-disabled-border-color;
+
+$form-select-bg-position: right 0.75rem center;
+$form-select-bg-size: 1.5rem 1.5rem;
+
+$form-select-indicator-color: $text-muted;
+$form-select-indicator: url("data:image/svg+xml,<svg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'><path d='M6 9L12 15L18 9' stroke='#{$form-select-indicator-color}' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+
+$form-select-focus-box-shadow: $input-focus-box-shadow;
+
+// Form floating
+$form-floating-height: 4.25rem;
+$form-floating-line-height: $input-btn-line-height;
+$form-floating-padding-y: 1.5rem;
+$form-floating-input-padding-t: 2rem;
+$form-floating-input-padding-b: 0.75rem;
+$form-floating-label-opacity: 1;
+$form-floating-label-transform: translateY(-0.75rem);
+$form-floating-transition: transform .1s ease-in-out;
+$form-floating-select-bg-position: right 0.75rem bottom 0.75rem;
+
+// Form validation
+$form-feedback-margin-top: 0.25rem;
+$form-feedback-line-height: $form-text-line-height;
+
+$form-feedback-invalid-color: $danger;
+
+$form-feedback-icon-invalid-color: $form-feedback-invalid-color;
+$form-feedback-icon-invalid: url("data:image/svg+xml,<svg width='17' height='17' viewBox='0 0 17 17' fill='none' xmlns='http://www.w3.org/2000/svg'><path d='M14.5 8.5a6 6 0 1 1-12 0 6 6 0 0 1 12 0ZM8.5 5.498v4.04M8.5 11.509v.001' stroke='#{$form-feedback-icon-invalid-color}' stroke-miterlimit='10' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+
+$form-validation-states: (
+  "invalid": (
+    "color": $form-feedback-invalid-color,
+    "icon": $form-feedback-icon-invalid
+  )
+);
+
+// Z-index master list
+$zindex-overlay: 1090;
+$zindex-toast: 1100;
+
+// Dropdowns
+$dropdown-min-width: 100%;
+$dropdown-padding-y: 0;
+$dropdown-spacer: 1rem;
+$dropdown-border-color: $border-color;
+
+$dropdown-divider-margin-y: 0;
+
+$dropdown-link-color: $body-color;
+$dropdown-link-hover-bg: $light-background-grey;
+
+$dropdown-link-disabled-color: $border-color;
+
+$dropdown-item-padding-y: $spacer;
+
+// Placeholders
+$placeholder-bg: $light-background-grey;
+$placeholder-border-radius: $border-radius-sm;
+$placeholder-opacity-max: 1;
+$placeholder-opacity-min: 0.3;
+
+// Cards
+$card-border-color: $border-color;
+$card-color: $body-color;
+
+$card-cap-bg: $light-background-grey;
+$card-cap-color: $secondary;
+
+// Accordion
+$accordion-icon-transition: transform 200ms $transition-timing-function-base;
+$accordion-icon-transform: rotateX(-180deg);
+
+// Tooltips
+$tooltip-font-size: 0.875rem;
+$tooltip-max-width: 300px;
+$tooltip-opacity: 1;
+$tooltip-padding-y: 1.125rem;
+$tooltip-padding-x: 1rem;
+
+$tooltip-arrow-width: 2.25rem;
+$tooltip-arrow-height: 1.125rem;
+
+// Toasts
+$toast-padding-x: 0.5rem;
+$toast-color: $body-color;
+$toast-background-color: $white;
+$toast-border-color: currentColor;
+
+// Badges
+$badge-font-size: 0.75rem;
+$badge-padding-y: 0.25rem;
+$badge-padding-x: 0.5rem;
+$badge-border-radius: $border-radius-sm;
+
+// Modals
+$modal-padding-base: 1.5rem;
+$modal-inner-padding: $modal-padding-base;
+
+$modal-footer-margin-between: 0;
+
+$modal-title-line-height: $line-height-lg;
+
+$modal-content-color: $body-color;
+$modal-content-border-color: $border-color;
+$modal-content-border-radius: $border-radius;
+$modal-content-inner-border-radius: 0;
+
+$modal-header-border-width: 0;
+$modal-footer-border-width: 0;
+
+$modal-backdrop-bg: #000000;
+$modal-backdrop-opacity: 0.4;
+
+$modal-header-padding: $modal-padding-base $modal-padding-base 0.5rem;
+
+$modal-xs: 360px;
+$modal-sm: 480px;
+$modal-md: 768px;
+$modal-lg: 1024px;
+
+// Alerts
+$alert-padding-y: 0.5rem;
+$alert-padding-x: 1rem;
+$alert-margin-bottom: 0;
+
+// Spinners
+$spinner-width: 1.25rem;
+$spinner-border-width: 2px;
+
+// Close
+$btn-close-width: 1.5rem;
+$btn-close-padding-x: 0;
+$btn-close-color: $default-text;
+$btn-close-bg: url("data:image/svg+xml,<svg viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'><path stroke='#{$btn-close-color}' stroke-width='2' stroke-linecap='round' d='m7.757 16.242 8.486-8.485M7.757 7.757l8.486 8.486'/></svg>");
+$btn-close-opacity: 1;
+$btn-close-hover-opacity: 1;
+$btn-close-white-filter: grayscale(100%) brightness(200%);
+
+// Chips
+$chip-font-size: 0.75rem;
+$chip-line-height: 1.5rem;
+$chip-color: $body-color;
+$chip-padding-y: 0.25rem;
+$chip-padding-x: 0.75rem;
+$chip-border-width: $border-width;
+$chip-border-radius: $border-radius-sm;
+$chip-default-border-color: $border-color;
+
+$chip-line-height-sm: 1rem;
+$chip-padding-y-sm: 0.5rem;
+$chip-padding-x-sm: 1rem;
+
+$chip-line-height-lg: $chip-line-height;
+$chip-padding-y-lg: 0.5rem;
+$chip-padding-x-lg: 1rem;
+
+// Back
+$btn-back-width: $btn-close-width;
+$btn-back-height: $btn-close-width;
+$btn-back-color: $body-color;
+
+$btn-back-bg: url("data:image/svg+xml,<svg viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'><path stroke='#{$btn-back-color}' d='m12.5 17.5 6-6m0 0-6-6m6 6h-14' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+
+// Mobile home indicator height
+$home-indicator-height: env(safe-area-inset-bottom);
+
+// Bottom sheet
+$bottom-sheet-border-radius: 20px;
+
+$bottom-sheet-transition: transform 200ms $transition-timing-function-base;
+
+$bottom-sheet-header-padding: 1rem 1rem 0;
+$bottom-sheet-body-padding: 1rem;
+$bottom-sheet-footer-padding: 1rem;
+
+$bottom-title-line-height: 2.25rem;
+
+$bottom-sheet-close-height: 34px;
+$bottom-sheet-close-color: #E0E0E0;
+
+$bottom-sheet-home-indicator-height: subtract($home-indicator-height, $bottom-sheet-footer-padding);
+
+// App bar
+$app-bar-padding: 1rem;
+$app-bar-bg: $white;
+$app-bar-border-width: $border-width;
+$app-bar-border-color: $border-color;
+
+// Step progress
+$step-progress-done-image: url("data:image/svg+xml,<svg width='9' height='6' viewBox='0 0 11 9' fill='none' xmlns='http://www.w3.org/2000/svg'><path d='M1 4L4 7L10 1' stroke='#fff' stroke-width='2'/></svg>");
+
+// Loading
+$loading-animation-duration: 1200ms;
+
+// Progress
+$progress-height: 0.125rem;
+
+// List Group
+$list-group-item-padding-y: 0.75rem;
+$list-group-item-padding-x: 1.5rem;
+
+$list-group-border-width: 0;
+
+$list-group-action-hover-color: $primary;
+$list-group-action-active-color: $primary;
+
+$list-group-hover-bg: tint-color($primary, 94%);
+$list-group-action-active-bg: tint-color($primary, 94%);
+
+// Nav
+$nav-link-font-size: 0.75rem;
+$nav-link-font-weight: $font-weight-semibold;
+
+$nav-link-padding-y: 0.5rem;
+$nav-link-padding-x: 0.5rem;
+
+$nav-tabs-link-active-border-color: $primary;
+$nav-tabs-link-active-color: $primary;
+$nav-link-hover-color: $primary;
+$nav-link-color: $black;
+
+$nav-tabs-border-width: 1px;
+$nav-tabs-border-color: $grey-stroke;
