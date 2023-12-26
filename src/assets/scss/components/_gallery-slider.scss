@@ -1,0 +1,133 @@
+.gallery-slider {
+    &__container-image {
+        position: relative;
+        width: 100%;
+        padding-top: 57.4%;
+        flex: 1 0 100%;
+        background: $light-background-grey;
+
+        img {
+            position: absolute;
+            top: 0;
+        }
+    }
+
+    &__selected-image {
+        position: relative;
+        flex: 1 0 100%;
+
+        &__container {
+            overflow: hidden;
+            scroll-behavior: smooth;
+            @include hide-scrollbar();
+        }
+
+        &__prev {
+            left: 24px;
+        }
+
+        &__next {
+            right: 24px;
+        }
+
+        &__next, &__prev {
+            position: absolute;
+            top: 50%;
+        }
+    }
+
+    &__images {
+        position: relative;
+        @include hide-scrollbar();
+
+        div {
+            width: 88px;
+            height: 88px;
+            background: $light-background-grey;
+
+            img {
+                opacity: 0.2;
+                transition: opacity 350ms ease-in-out;
+            }
+        }
+
+        .selected {
+            opacity: 1;
+        }
+    }
+}
+
+@include media-breakpoint-up('sm') {
+    .gallery-slider {
+
+        &__images {
+
+            & div {
+
+                & img {
+
+                    &:hover {
+                        opacity: 1;
+                    }
+                }
+            }
+        }
+    }
+}
+
+@include media-breakpoint-down('sm') {
+    .gallery-slider {
+
+        &__container-image {
+            position: relative;
+            width: 100%;
+            padding-top: 57.4%;
+            flex: 1 0 100%;
+            scroll-snap-align: start;
+            background: $black;
+        }
+
+        &__selected-image {
+            scroll-snap-type: x mandatory;
+        }
+
+        &__images {
+            width: 100%;
+            @include hide-scrollbar();
+
+            &:before, &:after {
+                display: none;
+            }
+
+            div {
+                width: 48px;
+                height: 48px;
+                background: $black;
+
+                img {
+                    opacity: 0.3;
+                    transition: all 350ms;
+
+                    &:active {
+                        opacity: 1;
+                    }
+                }
+            }
+
+            .selected {
+                opacity: 1;
+            }
+        }
+    }
+}
+
+@include media-breakpoint-down('md') {
+    .gallery-slider {
+        &__images {
+            img {
+                width: 64px;
+                height: 64px;
+            }
+        }
+    }
+}
