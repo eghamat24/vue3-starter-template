@@ -1,0 +1,22 @@
+.collapse-button {
+  &:not(.collapsed) .collapse-icon {
+    transform: $accordion-icon-transform;
+  }
+}
+
+.collapse-button {
+  &:not(.collapsed) .collapse-icon-90-deg {
+    transform: rotate(90deg);
+  }
+}
+
+.collapse-icon, .collapse-icon-90-deg {
+  @include transition($accordion-icon-transition);
+}
+
+
+
+
+
+
+
