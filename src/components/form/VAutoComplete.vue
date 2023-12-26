@@ -8,11 +8,15 @@
             <div class="d-flex align-items-center">
                 <input
                     v-model="search"
+                    ref="inputElement"
                     :id="id"
                     :placeholder="placeholder"
                     :disabled="disabled"
                     :class="inputClassNames"
+                    autocomplete="off"
                     @focus="onFocus"
+                    @keydown.down="focusWithArrowDown"
+                    @keydown.delete="clearInput"
                 >
                 <button
                     v-if="modelValue && clearable"
@@ -21,7 +25,12 @@
                 />
             </div>
 
-            <ul :class="menuClassNames">
+            <ul
+                ref="menu"
+                :class="menuClassNames"
+                @keydown.down="focusNextItem"
+                @keydown.up="focusPreviousItem"
+            >
                 <li v-if="filteredItems.length === 0" class="ms-2">
                     {{ $t('No data available') }}
                 </li>
@@ -30,7 +39,10 @@
                     v-for="(item, index) in filteredItems"
                     class="dropdown-item"
                     :key="index"
+                    role="option"
+                    tabindex="0"
                     @click="selectItem(item)"
+                    @keyup.enter="selectItem(item)"
                 >
                     <slot name="item" :item="item">
                         {{ itemTextFunction(item) }}
@@ -199,6 +211,8 @@
             }
 
             const container = ref();
+            const menu = ref();
+            const inputElement = ref();
 
             function onFocus() {
                 showMenu();
@@ -222,6 +236,42 @@
                 selectedItem = undefined;
             }
 
+            function focusWithArrowDown(event) {
+                showMenu();
+                event.preventDefault();
+                menu.value.querySelectorAll('[role=option]')[0].focus();
+            }
+
+            function focusNextItem(e) {
+                e.preventDefault();
+
+                const items = menu.value.querySelectorAll('[role=option]');
+                const focusedItem = document.activeElement;
+                const elementsArray = [].slice.call(items);
+
+                if (!elementsArray.includes(focusedItem)) {
+                    items[0].focus();
+                } else if (focusedItem !== elementsArray[elementsArray.length - 1]) {
+                    focusedItem.nextElementSibling.focus();
+                }
+            }
+
+            function focusPreviousItem(e) {
+                e.preventDefault();
+
+                const items = menu.value.querySelectorAll('[role=option]');
+                const focusedItem = document.activeElement;
+                const elementsArray = [].slice.call(items);
+
+                if (!elementsArray.includes(focusedItem)) {
+                    items[0].focus();
+                } else if (focusedItem !== elementsArray[0]) {
+                    focusedItem.previousElementSibling.focus();
+                } else {
+                    inputElement.value.focus();
+                }
+            }
+
             return {
                 inputGroupClassNames,
                 inputClassNames,
@@ -240,10 +290,14 @@
                 selectItem,
 
                 container,
+                menu,
+                inputElement,
                 onFocus,
 
                 clearInput,
-
+                focusWithArrowDown,
+                focusNextItem,
+                focusPreviousItem
             };
         }
     };
