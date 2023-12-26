@@ -1,4 +1,4 @@
-import { reflow, executeAfterTransition } from 'bootstrap/js/src/util';
+import { reflow, executeAfterTransition, isRTL } from 'bootstrap/js/src/util';
 
 function isEmptyObject(value) {
     for (const property in value) {
@@ -27,6 +27,7 @@ function hasVNodeSlot(vnode, slotName) {
 }
 
 export {
+    isRTL,
     reflow,
     executeAfterTransition,
     isEmptyObject,
