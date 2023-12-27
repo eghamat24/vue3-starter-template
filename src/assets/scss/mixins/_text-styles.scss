@@ -1,0 +1,49 @@
+@mixin subtitle-1($important: false) {
+  font-size: 1.25rem important-if($important);
+  line-height: 2rem important-if($important);
+}
+
+@mixin subtitle-2($important: false) {
+  font-size: 1.125rem important-if($important);
+  line-height: 2rem important-if($important);
+}
+
+@mixin subtitle-3($important: false) {
+  font-size: 1rem important-if($important);
+  line-height: 1.5rem important-if($important);
+}
+
+@mixin body-1($important: false) {
+  font-size: 0.875rem important-if($important);
+  line-height: 1.5rem important-if($important);
+}
+
+@mixin body-2($important: false) {
+  font-size: 0.75rem important-if($important);
+  line-height: 1.5rem important-if($important);
+}
+
+@mixin caption-1($important: false) {
+  font-size: 0.6875rem important-if($important);
+  line-height: 1.5rem important-if($important);
+}
+
+@mixin caption-2($important: false) {
+  font-size: 0.6875rem important-if($important);
+  line-height: 1.0625rem important-if($important);
+}
+
+@mixin header-5($important: false) {
+  font-size: 2rem important-if($important);
+  line-height: 3.25rem important-if($important);
+}
+
+@mixin header-6($important: false) {
+  font-size: 1.5rem important-if($important);
+  line-height: 3rem important-if($important);
+}
+
+@mixin header-3($important: false) {
+  font-size: 1.625rem important-if($important);
+  line-height: 3rem important-if($important);
+}
