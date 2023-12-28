@@ -1,0 +1,39 @@
+.bottom-sheet-close {
+  height: $bottom-sheet-close-height;
+  width: 100%;
+  flex: 0 0 $bottom-sheet-close-height;
+  text-align: center;
+
+  &:before {
+    content: "";
+    display: inline-block;
+    height: 5px;
+    width: 70px;
+    background-color: $bottom-sheet-close-color;
+    border-radius: $border-radius-pill;
+  }
+}
+
+.bottom-sheet-home-indicator-space {
+  height: $bottom-sheet-home-indicator-height;
+  width: 100%;
+}
+
+.bottom-sheet-moving {
+  transition: none !important;
+}
+
+.full-bottom-sheet {
+  &.modal-dialog {
+    > .modal-content {
+      > .modal-header {
+        padding-bottom: 1rem;
+      }
+
+      > .modal-body {
+        padding-top: 0;
+        overflow: auto;
+      }
+    }
+  }
+}
