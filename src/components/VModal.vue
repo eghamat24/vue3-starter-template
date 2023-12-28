@@ -219,15 +219,6 @@ export default {
         const CLASS_NAME_OPEN = 'modal-open';
         const CLASS_NAME_SHOW = 'show';
 
-        // function hidePinModal() {
-        //     dialog.value.classList.remove('modal-dialog-pinned');
-        //     dialog.value.style.top = null;
-        //     dialog.value.style.right = null;
-        //     dialog.value.style.left = null;
-        //
-        //     document.removeEventListener(getEventModal(EVENT_MODAL_HIDE), hidePinModal);
-        // }
-
         function showModal() {
             emit('update:show', true);
 
