@@ -26,11 +26,29 @@ function hasVNodeSlot(vnode, slotName) {
     return vnode.children !== null && Object.prototype.hasOwnProperty.call(vnode.children, slotName);
 }
 
+function getScrollBarWidth() {
+    const documentWidth = document.documentElement.clientWidth;
+    return Math.abs(window.innerWidth - documentWidth);
+}
+
+function hideScrollBar() {
+    const width = getScrollBarWidth();
+    document.body.style.overflow = 'hidden';
+    document.body.style.paddingRight = `${width}px`;
+}
+
+function resetScrollBar() {
+    document.body.style.overflow = null;
+    document.body.style.paddingRight = null;
+}
+
 export {
     reflow,
     executeAfterTransition,
     isEmptyObject,
     isWritableFormElement,
     getUniqueId,
-    hasVNodeSlot
+    hasVNodeSlot,
+    hideScrollBar,
+    resetScrollBar
 };

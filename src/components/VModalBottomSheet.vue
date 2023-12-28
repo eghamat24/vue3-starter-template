@@ -1,29 +1,33 @@
 <template>
-    <div
-        v-if="!lazyLoad"
-        ref="modal"
-        :id="id"
-        :class="modalClassNames"
-        tabindex="-1"
-        aria-hidden="true"
-        @click.self="hide"
-    >
+<div
+    v-if="!lazyLoad"
+    ref="modal"
+    :id="id"
+    :class="modalClassNames"
+    tabindex="-1"
+    aria-hidden="true"
+    @click.self="hide"
+>
+    <div ref="dialog" :class="dialogClassNames">
         <div
-            ref="dialog"
-            :class="dialogClassName"
+            ref="content"
+            class="modal-content"
+            @touchstart="touchStartHandler"
         >
-            <div class="modal-content">
-                <div class="modal-header" v-if="$slots.title">
-                    <button
-                        type="button"
-                        :class="['btn-back me-2', 'd-' + mobileBreakpoint + '-none']"
-                        aria-label="Back"
-                        @click="hide"
-                    />
+            <button
+                type="button"
+                :class="['bottom-sheet-close', 'd-' + mobileBreakpoint + '-none']"
+                aria-label="Close"
+                @click="hide"
+            ></button>
 
+            <div class="modal-header" v-if="$slots.title">
+                <slot name="header">
                     <div class="modal-title">
                         <slot name="title"></slot>
                     </div>
+
+                    <slot name="appendTitle" v-if="$slots.appendTitle"></slot>
 
                     <button
                         type="button"
@@ -32,18 +36,19 @@
                         @click="hide"
                     />
 
-                    <slot name="extension" v-if="$slots.extension"></slot>
-                </div>
+                    <slot
+                        v-if="$slots.extension"
+                        name="extension"
+                    ></slot>
+                </slot>
+            </div>
 
-                <div class="modal-header" v-else-if="$slots.header">
-                    <slot name="header"></slot>
-                </div>
+            <div class="modal-body">
+                <slot name="body"></slot>
+            </div>
 
-                <div class="modal-body">
-                    <slot name="body"></slot>
-                </div>
-
-                <div class="modal-footer" v-if="$slots.footer">
+            <div class="modal-footer" v-if="$slots.footer">
+                <div class="w-100">
                     <slot name="footer">
                         <button
                             type="button"
@@ -54,48 +59,76 @@
                         </button>
                     </slot>
                 </div>
-
-                <slot name="appendFooter" v-if="$slots.appendFooter"></slot>
             </div>
+
+            <div :class="['bottom-sheet-home-indicator-space', 'd-' + mobileBreakpoint + '-none']"></div>
         </div>
     </div>
+</div>
 </template>
 
 <script>
 // Vue
-import { ref, computed, watch, nextTick, onMounted } from 'vue';
+import { ref, watch, nextTick, onMounted, computed } from 'vue';
+
+// Utils
+import {
+    reflow,
+    hideScrollBar,
+    resetScrollBar,
+    executeAfterTransition
+} from '@/utils';
+import Breakpoints from '@/utils/breakpoints';
 
 // Enums
 import ComponentSize from '@/enums/ComponentSize';
 
-// Utils
-import { executeAfterTransition, reflow, hideScrollBar, resetScrollBar } from '@/utils';
-import Breakpoints from '@/utils/breakpoints';
-
+// Events
 import {
+    EVENT_MODAL_HIDE,
     EVENT_MODAL_SHOW,
-    EVENT_MODAL_TOGGLE,
-    EVENT_MODAL_HIDE
+    EVENT_MODAL_TOGGLE
 } from '@/directives/modal.directive';
 
-// Services
-import LanguageService from "@/services/language.service";
+// Service
+import LanguageService from '@/services/language.service';
 
 export default {
-    name: 'VModal',
+    name: 'VModalBottomSheet',
 
     props: {
         show: {
             type: Boolean,
             default: false
         },
-        id: {
-            type: String,
-            required: true
+        lazy: {
+            type: Boolean,
+            default: true
+        },
+        centered: {
+            type: Boolean,
+            default: true
+        },
+        backdrop: {
+            type: Boolean,
+            default: true
+        },
+        scrollable: {
+            type: Boolean,
+            default: false
         },
         size: {
             type: String,
-            default: 'md'
+            default: ComponentSize.MD,
+            validator(value) {
+                return [
+                    ComponentSize.XS,
+                    ComponentSize.SM,
+                    ComponentSize.MD,
+                    ComponentSize.LG,
+                    ComponentSize.XL
+                ].includes(value);
+            }
         },
         mobileBreakpoint: {
             type: String,
@@ -110,24 +143,13 @@ export default {
                 ].includes(value);
             }
         },
-        centered: {
-            type: Boolean,
-            default: true,
-        },
-        scrollable: {
-            type: Boolean,
-            default: false
-        },
-        backdrop: {
-            type: Boolean,
-            default: true
-        },
-        lazy: {
-            type: Boolean,
-            default: true
+        id: {
+            type: String,
+            default: null
         },
         pin: {
             type: String,
+            default: null
         },
         offset: {
             type: Array,
@@ -140,21 +162,26 @@ export default {
     setup(props, { emit }) {
         const isMobile = Breakpoints.down(props.mobileBreakpoint);
 
-        const modal = ref(null);
-        const dialog = ref(null);
+        const modal = ref();
+        const dialog = ref();
+        const content = ref();
 
         const modalClassNames = computed(() => {
-            return {
-                'modal fade': true,
-                'backdrop': props.backdrop
-            }
+            return [
+                'modal fade overflow-hidden',
+
+                {
+                    'backdrop': props.backdrop
+                }
+            ];
         });
 
-        const dialogClassName = computed(() => {
+        const dialogClassNames = computed(() => {
             return [
                 'modal-dialog',
-                'modal-' + props.size,
-                'modal-fullscreen-' + props.mobileBreakpoint + '-down',
+                `modal-${props.size}`,
+                `modal-bottom-sheet-${props.mobileBreakpoint}-down`,
+
                 {
                     'modal-dialog-centered': props.centered,
                     'modal-dialog-scrollable': props.scrollable
@@ -164,7 +191,7 @@ export default {
 
         /**
          * ------------------------------------------------------------------------
-         * Handle pin modal
+         * Handle pin modal bottom sheet
          * ------------------------------------------------------------------------
          */
 
@@ -173,7 +200,7 @@ export default {
         const CLASS_NAME_PINNED = 'modal-dialog-pinned';
         const CLASS_NAME_CENTERED = 'modal-dialog-centered';
 
-        function addPinHandler() {
+        function addPinModal() {
             const pinEl = document.querySelector(props.pin);
             const pinElRect = pinEl.getBoundingClientRect();
 
@@ -209,6 +236,87 @@ export default {
 
         /**
          * ------------------------------------------------------------------------
+         * Handle bottom sheet
+         * ------------------------------------------------------------------------
+         */
+
+        let isBottomSheet = false;
+
+        const CLASS_NAME_MOVING = 'bottom-sheet-moving';
+        const CLASS_NAME_FULL = 'full-bottom-sheet';
+        const SELECTOR_CLOSE = '.bottom-sheet-close';
+
+        function checkResizeObserver() {
+            if ('ResizeObserver' in window) {
+                const resizeObserver = new ResizeObserver(resizeHandler);
+
+                if (isShow.value) {
+                    resizeObserver.observe(content.value);
+                } else {
+                    resizeObserver.unobserve(content.value);
+                }
+            } else {
+                resizeHandler();
+            }
+        }
+
+        function resizeHandler() {
+            const clientHeight = document.documentElement.clientHeight - DEFAULT_OFFSET_Y;
+            const contentHeight = content.value.offsetHeight;
+
+            if (contentHeight >= clientHeight) {
+                isBottomSheet = true;
+
+                dialog.value.classList.add(CLASS_NAME_FULL);
+                content.value.style.maxHeight = clientHeight + 'px';
+            } else {
+                isBottomSheet = false;
+
+                dialog.value.classList.remove(CLASS_NAME_FULL);
+                content.value.style.maxHeight = null;
+            }
+        }
+
+        function touchStartHandler(event) {
+            let clientY = event.touches[0].clientY;
+            let translateY = 0;
+
+            content.value.classList.add(CLASS_NAME_MOVING);
+            const target = isBottomSheet ? modal.value.querySelector(SELECTOR_CLOSE) : modal.value;
+
+            function moveHandler(touchMoveEvent) {
+                const newClientY = touchMoveEvent.touches[0].clientY;
+
+                translateY += (newClientY - clientY);
+
+                if (translateY < 0) {
+                    translateY = 0;
+                }
+
+                clientY = newClientY;
+                content.value.style.transform = `translateY(${translateY}px)`;
+            }
+
+            function endHandler() {
+                content.value.classList.remove(CLASS_NAME_MOVING);
+                content.value.style.transform = null;
+
+                const movementInPercent = (translateY * 100) / content.value.clientHeight;
+
+                if (movementInPercent > 15) {
+                    hide();
+                }
+
+                target.removeEventListener('touchmove', moveHandler);
+                document.removeEventListener('touchend', endHandler, { once: true });
+            }
+
+            target.addEventListener('touchmove', moveHandler);
+            document.addEventListener('touchend', endHandler, { once: true });
+        }
+
+        /**
+         * ------------------------------------------------------------------------
          * Handle show and hide modal
          * ------------------------------------------------------------------------
          */
@@ -218,15 +326,6 @@ export default {
 
         const CLASS_NAME_OPEN = 'modal-open';
         const CLASS_NAME_SHOW = 'show';
-
-        // function hidePinModal() {
-        //     dialog.value.classList.remove('modal-dialog-pinned');
-        //     dialog.value.style.top = null;
-        //     dialog.value.style.right = null;
-        //     dialog.value.style.left = null;
-        //
-        //     document.removeEventListener(getEventModal(EVENT_MODAL_HIDE), hidePinModal);
-        // }
 
         function showModal() {
             emit('update:show', true);
@@ -239,8 +338,10 @@ export default {
 
             modal.value.classList.add(CLASS_NAME_SHOW);
 
+            checkResizeObserver();
+
             if (props.pin && !isMobile) {
-                addPinHandler();
+                addPinModal();
             }
 
             emit('show', modal.value);
@@ -268,6 +369,8 @@ export default {
 
                 emit('hidden', modal.value);
             }, modal.value);
+
+            checkResizeObserver();
         }
 
         function show() {
@@ -285,7 +388,6 @@ export default {
         onMounted(() => {
             if (props.id) {
                 document.addEventListener(`${EVENT_MODAL_SHOW}:${props.id}`, show);
-
                 document.addEventListener(`${EVENT_MODAL_HIDE}:${props.id}`, hide);
 
                 document.addEventListener(`${EVENT_MODAL_TOGGLE}:${props.id}`, toggle);
@@ -317,12 +419,14 @@ export default {
             modalClassNames,
 
             dialog,
-            dialogClassName,
+            dialogClassNames,
 
+            content,
             lazyLoad,
 
             hide,
+            touchStartHandler
         };
     }
-}
+};
 </script>

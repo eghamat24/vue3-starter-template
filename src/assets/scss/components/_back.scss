@@ -1,0 +1,8 @@
+.btn-back {
+  box-sizing: content-box;
+  width: $btn-back-width;
+  height: $btn-back-height;
+  color: $btn-back-color;
+  background: transparent escape-svg($btn-back-bg) center / $btn-back-width auto no-repeat;
+  border: 0;
+}

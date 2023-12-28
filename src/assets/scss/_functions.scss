@@ -1,0 +1,3 @@
+@function important-if($important) {
+  @return if($important, !important, null);
+}

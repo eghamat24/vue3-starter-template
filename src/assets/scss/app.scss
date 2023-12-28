@@ -12,12 +12,32 @@ html, body, #app {
   flex-direction: column;
 }
 
+
+// Functions
+@import "functions";
+
 @import "bootstrap";
 
+// Variables
+@import "framework/variables";
+@import "bootstrap/scss/variables";
 
+// Mixins
+
+// Components
+// Variables
+@import "framework/variables";
+//@import "~bootstrap/scss/variables";
+
+// Mixins
+//@import "~bootstrap/scss/mixins";
+@import "mixins/text-styles";
+@import "mixins/scrollbar";
+
+// Components
 @import "components/autocomplete";
 @import "components/modal";
+@import "components/back";
+@import "components/bottom-sheet";
+@import "components/modal-bottom-sheet";
 @import "components/tooltip";
-@import "components/table";
-@import "components/calendar-view";
-@import "components/date-picker";
