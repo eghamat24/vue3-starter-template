@@ -1,0 +1,44 @@
+@each $breakpoint in map-keys($grid-breakpoints) {
+  $infix: breakpoint-infix($breakpoint, $grid-breakpoints);
+  $postfix: if($infix != "", $infix + "-down", "");
+
+  @include media-breakpoint-down($breakpoint) {
+    .modal-bottom-sheet#{$postfix} {
+      height: 100%;
+      max-width: none !important;
+      margin: 0 auto;
+      display: flex;
+      align-items: flex-end;
+
+      > .modal-content {
+        border-radius: $bottom-sheet-border-radius $bottom-sheet-border-radius 0 0;
+        transition: $bottom-sheet-transition;
+        transform: translateY(100%);
+
+        .modal.show > & {
+          transform: none;
+        }
+
+        > .modal-header {
+          padding: $bottom-sheet-header-padding;
+
+          > .modal-title {
+            line-height: $bottom-title-line-height;
+          }
+        }
+
+        > .modal-body {
+          padding: $bottom-sheet-body-padding;
+
+          > .modal-neutralizer {
+            margin: $bottom-sheet-body-padding * -1;
+          }
+        }
+
+        > .modal-footer {
+          padding: $bottom-sheet-footer-padding;
+        }
+      }
+    }
+  }
+}
