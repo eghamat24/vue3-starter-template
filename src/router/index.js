@@ -16,13 +16,18 @@ const router = createRouter({
             beforeEnter: [AuthenticateRoute],
             children: [
                 {
-                    path: '',
+                    path: 'dashboard',
                     name: 'Dashboard',
                     component: () => import('@/views/DashboardView.vue'),
                     beforeEnter: [AuthorizeRoute],
                     meta: {
                         permissions: ['dashboard']
                     }
+                },
+                {
+                    path: 'users',
+                    name: 'Users',
+                    component: () => import('@/views/UsersView.vue')
                 }
             ]
         },

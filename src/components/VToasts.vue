@@ -1,5 +1,5 @@
 <template>
-    <div class="toast-container bottom-0">
+    <div class="toast-container bottom-0 end-0">
         <div
             v-for="item of items"
             :key="item.id"
@@ -17,8 +17,7 @@
                     class="btn-close p-3"
                     aria-label="Close"
                     @click="hideToast(item.id)"
-                >
-                </button>
+                ></button>
             </div>
         </div>
     </div>

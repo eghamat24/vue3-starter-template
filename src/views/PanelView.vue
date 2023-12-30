@@ -1,17 +1,16 @@
 <template>
-    <header>
-        <nav>
-            <RouterLink :to="{ name: 'Dashboard' }">
-                {{ $t('Dashboard') }}
-            </RouterLink>
-            |
-            <RouterLink :to="{ name: 'Login' }">
-                {{ $t('Login') }}
-            </RouterLink>
-        </nav>
-    </header>
-
-    <main>
+    <VLayout>
         <RouterView />
-    </main>
+    </VLayout>
 </template>
+
+<script>
+    // Components
+    import VLayout from '@/components/layout/VLayout.vue';
+
+    export default {
+        components: {
+            VLayout
+        }
+    }
+</script>

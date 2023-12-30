@@ -4,6 +4,7 @@ export default {
     "Password": "Password",
     "Submit": "Submit",
     "Dashboard": "Dashboard",
+    "Users": "Users",
     "Authorization Error": "Authorization Error",
     "No data available": "No data available",
     "You are successfully logged in": "You are successfully logged in",
