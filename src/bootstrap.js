@@ -14,5 +14,5 @@ ApiService.addResponseMiddleware(AuthenticateUser);
 if (LanguageService.isRtl()) {
     import('@/assets/scss/app-rtl.scss');
 } else {
-    import('@/assets/scss/app-ltr.scss');
+    import('@/assets/scss/app.scss');
 }
