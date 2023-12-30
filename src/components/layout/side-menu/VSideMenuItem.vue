@@ -6,7 +6,7 @@
     >
         <div class="me-3">
             <slot name="icon">
-                <i class="bi bi-list"></i>
+                <i class="bi-list"></i>
             </slot>
         </div>
 

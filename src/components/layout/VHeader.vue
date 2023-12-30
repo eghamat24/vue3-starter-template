@@ -4,7 +4,7 @@
             type="submit"
             class="btn btn-sm text-white"
         >
-            <i class="bi bi-list h4"></i>
+            <i class="bi-list h4"></i>
         </button>
 
         <div class="px-2">
@@ -21,7 +21,7 @@
                 class="btn btn-sm text-white"
                 @click="logout"
             >
-                <i class="bi bi-power h4"></i>
+                <i class="bi-power h4"></i>
             </button>
         </div>
     </header>
