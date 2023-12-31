@@ -1,13 +1,11 @@
 <template>
     <tbody>
     <tr v-if="isLoading" class="table__loading">
-        <td :colspan="columns.length">
-            <span class="spinner-border text-primary"></span>
-        </td>
+        <td :colspan="columns.length" class="text-muted">{{ $t('Loading') }} ...</td>
     </tr>
 
     <tr v-else-if="items.length === 0" class="text-center">
-        <td :colspan="columns.length" class="text-mute">{{ $t('No data available') }}</td>
+        <td :colspan="columns.length" class="text-muted">{{ $t('No data available') }}</td>
     </tr>
 
     <template v-else-if="rowSlot">
@@ -15,7 +13,7 @@
             :is="rowSlot"
             v-for="(item, rowIndex) of items"
             :key="rowIndex"
-            :columns="renderColumns(item ,rowIndex)"
+            :columns="renderColumns(item, rowIndex)"
             :item="item"
             :rowIndex="rowIndex"
         />
