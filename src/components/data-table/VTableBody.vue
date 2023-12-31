@@ -1,37 +1,36 @@
 <template>
     <tbody>
-    <tr v-if="isLoading" class="table__loading">
-        <td :colspan="columns.length" class="text-muted">{{ $t('Loading') }} ...</td>
-    </tr>
-
-    <tr v-else-if="items.length === 0" class="text-center">
-        <td :colspan="columns.length" class="text-muted">{{ $t('No data available') }}</td>
-    </tr>
-
-    <template v-else-if="rowSlot">
-        <component
-            :is="rowSlot"
-            v-for="(item, rowIndex) of items"
-            :key="rowIndex"
-            :columns="renderColumns(item, rowIndex)"
-            :item="item"
-            :rowIndex="rowIndex"
-        />
-    </template>
-
-    <template v-else>
-        <tr
-            v-for="(item, rowIndex) of items"
-            :key="rowIndex"
-        >
-            <component
-                :is="column"
-                v-for="(column, index) of renderColumns(item ,rowIndex)"
-                :key="index"
-            />
+        <tr v-if="isLoading" class="table__loading">
+            <td :colspan="columns.length" class="text-muted">{{ $t('Loading') }} ...</td>
         </tr>
-    </template>
 
+        <tr v-else-if="items.length === 0" class="text-center">
+            <td :colspan="columns.length" class="text-muted">{{ $t('No data available') }}</td>
+        </tr>
+
+        <template v-else-if="rowSlot">
+            <component
+                :is="rowSlot"
+                v-for="(item, rowIndex) of items"
+                :key="rowIndex"
+                :columns="renderColumns(item, rowIndex)"
+                :item="item"
+                :rowIndex="rowIndex"
+            />
+        </template>
+
+        <template v-else>
+            <tr
+                v-for="(item, rowIndex) of items"
+                :key="rowIndex"
+            >
+                <component
+                    :is="column"
+                    v-for="(column, index) of renderColumns(item ,rowIndex)"
+                    :key="index"
+                />
+            </tr>
+        </template>
     </tbody>
 </template>
 

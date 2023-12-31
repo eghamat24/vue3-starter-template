@@ -14,23 +14,23 @@
 </template>
 
 <script>
-// Utils
-import { hasVNodeSlot } from '@/utils/vue';
+    // Utils
+    import { hasVNodeSlot } from '@/utils/vue';
 
-export default {
-    name: 'VTableHeader',
+    export default {
+        name: 'VTableHeader',
 
-    props: {
-        columns: {
-            type: Array,
-            required: true
+        props: {
+            columns: {
+                type: Array,
+                required: true
+            }
+        },
+
+        setup() {
+            return {
+                hasVNodeSlot
+            };
         }
-    },
-
-    setup() {
-        return {
-            hasVNodeSlot
-        };
     }
-}
 </script>
