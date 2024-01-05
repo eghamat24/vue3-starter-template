@@ -1,20 +1,21 @@
 <template>
-    <table class="table">
-        <VTableHeader :columns="columns"/>
-        <VTableBody
-            :columns="columns"
-            :items="items"
-            :row-slot="rowSlot"
-            :is-loading="isLoading"
-        />
-    </table>
+    <div class="border border-2 rounded-2 overflow-hidden bg-white">
+        <table class="table mb-0">
+            <VTableHeader :columns="columns"/>
+            <VTableBody
+                :columns="columns"
+                :row-slot="rowSlot"
+                :items="items"
+                :is-loading="isLoading"
+            />
+        </table>
 
-    <VPagination
-        :model-value="page"
-        :total="itemsLength"
-        :itemsPerPage="itemsPerPage"
-        @update:model-value="updatePage"
-    />
+        <VPagination
+            :model-value="page"
+            @update:model-value="updatePage"
+            :total="itemsLength"
+        />
+    </div>
 </template>
 
 <script>
@@ -54,7 +55,7 @@
             itemsPerPage: {
                 type: Number,
                 default: 10
-            },
+            }
         },
 
         emits: ['update:page'],
