@@ -1,8 +1,12 @@
 import { reflow, executeAfterTransition } from 'bootstrap/js/src/util';
 
+function hasOwnProperty(object, key) {
+    return Object.prototype.hasOwnProperty.call(object, key);
+}
+
 function isEmptyObject(value) {
     for (const property in value) {
-        if (Object.prototype.hasOwnProperty.call(value, property)) {
+        if (hasOwnProperty(value, property)) {
             return false;
         }
     }
@@ -22,6 +26,7 @@ function getUniqueId() {
 export {
     reflow,
     executeAfterTransition,
+    hasOwnProperty,
     isEmptyObject,
     isWritableFormElement,
     getUniqueId
