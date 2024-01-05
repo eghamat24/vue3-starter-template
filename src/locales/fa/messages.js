@@ -13,5 +13,9 @@ export default {
     "Id": "شناسه",
     "Name": "نام",
     "Email": "یارانامه",
-    "Loading": "درحال بارگذاری"
+    "Loading": "درحال بارگذاری",
+    "Previous": "قبلی",
+    "Next": "بعدی",
+    "From": "از",
+    "Size": "اندازه"
 };

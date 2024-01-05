@@ -13,5 +13,9 @@ export default {
     "Id": "Id",
     "Name": "Name",
     "Email": "Email",
-    "Loading": "Loading"
+    "Loading": "Loading",
+    "Previous": "Previous",
+    "Next": "Next",
+    "From": "From",
+    "Size": "Size"
 };
