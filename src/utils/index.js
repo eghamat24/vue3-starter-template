@@ -19,8 +19,29 @@ function isWritableFormElement(type) {
 }
 
 let uniqueIdCount = 0;
+
 function getUniqueId() {
     return 'uid_' + uniqueIdCount++;
+}
+
+function resolveIteratee(iteratee) {
+    if (typeof iteratee === 'string') {
+        return object => object[iteratee];
+    }
+
+    return iteratee;
+}
+
+function keyBy(array, iteratee) {
+    iteratee = resolveIteratee(iteratee);
+
+    const result = {};
+
+    for (const item of array) {
+        result[iteratee(item)] = item;
+    }
+
+    return result;
 }
 
 export {
@@ -29,5 +50,6 @@ export {
     hasOwnProperty,
     isEmptyObject,
     isWritableFormElement,
-    getUniqueId
+    getUniqueId,
+    keyBy
 };
