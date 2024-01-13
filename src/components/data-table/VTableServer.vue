@@ -13,6 +13,8 @@
         <VPagination
             :model-value="page"
             @update:model-value="updatePage"
+            :size="itemsPerPage"
+            @update:size="updateItemsPerPage"
             :total="itemsLength"
         />
 
@@ -54,17 +56,17 @@
                 type: Number,
                 default: 1
             },
-            isLoading: {
-                type: Boolean,
-                default: false
-            },
             itemsPerPage: {
                 type: Number,
                 default: 10
+            },
+            isLoading: {
+                type: Boolean,
+                default: false
             }
         },
 
-        emits: ['update:page'],
+        emits: ['update:page', 'update:itemsPerPage'],
 
         setup(props, context) {
             const rowSlot = computed(() => context.slots.row);
@@ -74,8 +76,13 @@
                 context.emit('update:page', value);
             }
 
+            function updateItemsPerPage(value) {
+                context.emit('update:itemsPerPage', value);
+            }
+
             return {
                 updatePage,
+                updateItemsPerPage,
 
                 columns,
                 rowSlot
