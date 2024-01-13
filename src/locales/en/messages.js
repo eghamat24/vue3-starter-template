@@ -17,5 +17,11 @@ export default {
     "Previous": "Previous",
     "Next": "Next",
     "From": "From",
-    "Size": "Size"
+    "Size": "Size",
+    "Todos": "Todos",
+    "Title": "Title",
+    "User": "User",
+    "Status": "Status",
+    "Completed": "Completed",
+    "Not completed": "Not completed",
 };

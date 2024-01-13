@@ -17,5 +17,11 @@ export default {
     "Previous": "قبلی",
     "Next": "بعدی",
     "From": "از",
-    "Size": "اندازه"
+    "Size": "اندازه",
+    "Todos": "کارها",
+    "Title": "عنوان",
+    "User": "کاربر",
+    "Status": "وضعیت",
+    "Completed": "تکمیل شده",
+    "Not completed": "تکمیل نشده",
 };

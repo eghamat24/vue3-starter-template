@@ -16,6 +16,14 @@
 
                 {{ $t('Users') }}
             </VSideMenuItem>
+
+            <VSideMenuItem :to="{ name: 'Todos' }">
+                <template #icon>
+                    <i class="bi-list-task"></i>
+                </template>
+
+                {{ $t('Todos') }}
+            </VSideMenuItem>
         </nav>
     </aside>
 </template>
