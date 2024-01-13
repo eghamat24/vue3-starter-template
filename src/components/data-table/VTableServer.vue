@@ -1,5 +1,5 @@
 <template>
-    <div class="border border-2 rounded-2 overflow-hidden bg-white">
+    <div class="border border-2 rounded-2 overflow-hidden position-relative bg-white">
         <table class="table mb-0">
             <VTableHeader :columns="columns"/>
             <VTableBody
@@ -15,6 +15,12 @@
             @update:model-value="updatePage"
             :total="itemsLength"
         />
+
+        <div v-if="isLoading" class="position-absolute top-0 start-0 h-100 w-100 bg-white bg-opacity-50 d-flex">
+            <div v-if="items.length !== 0" class="spinner-border text-secondary m-auto" role="status">
+                <span class="visually-hidden">{{ $t('Loading') }}...</span>
+            </div>
+        </div>
     </div>
 </template>
 

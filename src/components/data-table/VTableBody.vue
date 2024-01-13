@@ -1,7 +1,7 @@
 <template>
     <tbody>
-        <tr v-if="isLoading" class="text-center">
-            <td :colspan="columns.length" class="text-muted text-center">{{ $t('Loading') }} ...</td>
+        <tr v-if="isLoading && items.length === 0" class="text-center">
+            <td :colspan="columns.length" class="text-muted text-center">{{ $t('Loading') }}...</td>
         </tr>
 
         <tr v-else-if="items.length === 0" class="text-center">
