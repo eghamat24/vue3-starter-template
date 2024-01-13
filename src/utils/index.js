@@ -44,6 +44,27 @@ function keyBy(array, iteratee) {
     return result;
 }
 
+/**
+ * @param asyncFunction
+ * @returns {function(): Promise}
+ */
+function cachePromise(asyncFunction) {
+    let fetched = false;
+    let promise = null;
+
+    return function (...args) {
+        if (fetched) {
+            return promise;
+        }
+
+        fetched = true;
+
+        promise = asyncFunction.apply(this, args);
+
+        return promise;
+    };
+}
+
 export {
     reflow,
     executeAfterTransition,
@@ -51,5 +72,6 @@ export {
     isEmptyObject,
     isWritableFormElement,
     getUniqueId,
-    keyBy
+    keyBy,
+    cachePromise
 };
