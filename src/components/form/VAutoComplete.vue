@@ -22,11 +22,15 @@
             </div>
 
             <ul :class="menuClassNames">
+                <li v-if="isLoading" class="ms-2">
+                    {{ $t('Loading') }}...
+                </li>
+
                 <li v-if="filteredItems.length === 0" class="ms-2">
                     {{ $t('No data available') }}
                 </li>
+
                 <li
-                    v-else
                     v-for="(item, index) in filteredItems"
                     class="dropdown-item"
                     :key="index"
@@ -39,7 +43,6 @@
             </ul>
 
             <div v-if="errors.length !== 0" class="invalid-text">{{ errors[0] }}</div>
-
         </div>
     </div>
 </template>
@@ -76,6 +79,10 @@
                 default: null
             },
             disabled: {
+                type: Boolean,
+                default: false
+            },
+            isLoading: {
                 type: Boolean,
                 default: false
             },
@@ -206,7 +213,7 @@
                 const { off } = onClickOutside(container, function () {
                     if (selectedItem) {
                         search.value = itemTextFunction.value(selectedItem);
-                    }else {
+                    } else {
                         search.value = '';
                     }
 
@@ -248,7 +255,3 @@
         }
     };
 </script>
-
-<style lang="scss">
-
-</style>
