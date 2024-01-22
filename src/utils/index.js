@@ -65,6 +65,28 @@ function cachePromise(asyncFunction) {
     };
 }
 
+function normalizeData(value) {
+    if (value === 'true') {
+        return true;
+    }
+
+    if (value === 'false') {
+        return false;
+    }
+
+    const valueAsNumber = Number(value);
+
+    if (value === valueAsNumber.toString()) {
+        return valueAsNumber;
+    }
+
+    if (value === 'null') {
+        return null;
+    }
+
+    return value;
+}
+
 export {
     reflow,
     executeAfterTransition,
@@ -73,5 +95,6 @@ export {
     isWritableFormElement,
     getUniqueId,
     keyBy,
-    cachePromise
+    cachePromise,
+    normalizeData
 };

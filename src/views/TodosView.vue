@@ -1,6 +1,11 @@
 <template>
     <div class="h3 mb-4">{{ $t('Todos') }}</div>
 
+    <TodosFilter
+        v-model="filters"
+        class="mb-4"
+    />
+
     <VTableServer
         v-model:page="page"
         v-model:items-per-page="itemsPerPage"
@@ -40,13 +45,17 @@
 </template>
 
 <script>
+    import { watch } from 'vue';
+
     // Components
+    import TodosFilter from '@/components/todos/TodosFilter.vue';
     import VTableServer from '@/components/data-table/VTableServer.vue';
     import VColumn from '@/components/data-table/VColumn.vue';
 
     // Composables
     import { useFetchTodos } from '@/composables/todo.composable';
-    import { useServerPagination } from '@/composables/pagination.composable';
+    import { useRoutePagination } from '@/composables/pagination.composable';
+    import { useApplyFilters } from '@/composables/filter.composable';
 
     // Stores
     import { useUserStore } from '@/stores/user.store';
@@ -55,25 +64,35 @@
         name: 'TodosView',
 
         components: {
+            TodosFilter,
             VTableServer,
             VColumn
         },
 
         setup() {
             const { todosLoading, todos, fetchTodos } = useFetchTodos();
-            const { page, itemsPerPage, getPaginationParams, onChangePagination } = useServerPagination();
+            const { page, itemsPerPage, paginationParams } = useRoutePagination();
+
+            const filters = useApplyFilters({
+                title: undefined,
+                userId: undefined,
+                completed: undefined
+            });
 
             function fetch() {
                 const config = {
-                    params: getPaginationParams()
+                    params: {
+                        ...paginationParams.value,
+                        ...filters
+                    }
                 };
 
                 return fetchTodos(config);
             }
 
-            onChangePagination(() => fetch());
-
             fetch();
+
+            watch([paginationParams, filters], () => fetch());
 
             const userStore = useUserStore();
             userStore.fetch();
@@ -84,6 +103,8 @@
 
                 page,
                 itemsPerPage,
+
+                filters,
 
                 userStore
             };
