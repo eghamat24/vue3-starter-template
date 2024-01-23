@@ -12,7 +12,9 @@ html, body, #app {
   flex-direction: column;
 }
 
-@import "bootstrap";
+@import "bootstrap/scss/bootstrap";
+
+@import "reboot";
 
 @import "helpers/icons";
 

@@ -35,6 +35,7 @@
                     v-for="(item, index) in filteredItems"
                     class="dropdown-item"
                     :key="index"
+                    role="option"
                     @click="selectItem(item)"
                 >
                     <slot name="item" :item="item">
