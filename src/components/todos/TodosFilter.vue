@@ -24,7 +24,7 @@
         </div>
 
         <div class="col-3">
-            <VAutoComplete
+            <VSelect
                 v-model="filters.completed"
                 :items="statusItems"
                 item-key="key"
@@ -33,7 +33,7 @@
                 clearable
             >
                 <template #label>{{ $t('Status') }}</template>
-            </VAutoComplete>
+            </VSelect>
         </div>
     </VForm>
 </template>
@@ -43,6 +43,7 @@
     import VForm from '@/components/form/VForm.vue';
     import VInput from '@/components/form/VInput.vue';
     import VAutoComplete from '@/components/form/VAutoComplete.vue';
+    import VSelect from '@/components/form/VSelect.vue';
 
     // Stores
     import { useUserStore } from '@/stores/user.store';
@@ -59,7 +60,8 @@
         components: {
             VForm,
             VInput,
-            VAutoComplete
+            VAutoComplete,
+            VSelect
         },
 
         props: {
