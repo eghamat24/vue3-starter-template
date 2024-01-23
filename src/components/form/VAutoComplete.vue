@@ -14,10 +14,11 @@
                     :class="inputClassNames"
                     @focus="onFocus"
                 >
+
                 <button
-                    v-if="modelValue && clearable"
+                    v-if="clearable && !isEmpty(modelValue)"
                     @click="clearInput"
-                    class="btn-close position-absolute end-0 me-2"
+                    class="form-select-clear btn-close"
                 />
             </div>
 
@@ -51,7 +52,7 @@
     import { computed, ref } from 'vue';
 
     // Utils
-    import { getUniqueId } from '@/utils';
+    import { getUniqueId, isEmpty } from '@/utils';
 
     // Composables
     import { useRegisterFormValidator } from '@/composables/validatation.composable';
@@ -92,7 +93,6 @@
             },
             items: {
                 type: Array,
-                default: () => [],
                 required: true
             },
             itemKey: {
@@ -134,13 +134,13 @@
             });
             const inputClassNames = computed(() => {
                 return {
-                    'form-control': true,
+                    'form-select': true,
                     'is-invalid': isValid.value === false
                 };
             });
             const menuClassNames = computed(() => {
                 return {
-                    'dropdown-menu w-100': true,
+                    'dropdown-menu w-100 mt-1': true,
                     'show': isShowMenu.value
                 };
             });
@@ -220,6 +220,8 @@
             }
 
             return {
+                isEmpty,
+
                 inputGroupClassNames,
                 inputClassNames,
                 menuClassNames,

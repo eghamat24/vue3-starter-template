@@ -4,6 +4,10 @@ function hasOwnProperty(object, key) {
     return Object.prototype.hasOwnProperty.call(object, key);
 }
 
+function isObject(value) {
+    return Object.prototype.toString.call(value) === '[object Object]';
+}
+
 function isEmptyObject(value) {
     for (const property in value) {
         if (hasOwnProperty(value, property)) {
@@ -12,6 +16,18 @@ function isEmptyObject(value) {
     }
 
     return true;
+}
+
+function isEmpty(value) {
+    if (Array.isArray(value)) {
+        return value.length === 0;
+    }
+
+    if (isObject(value)) {
+        return isEmptyObject(value);
+    }
+
+    return value === undefined || value === null || value === '';
 }
 
 function isWritableFormElement(type) {
@@ -91,7 +107,9 @@ export {
     reflow,
     executeAfterTransition,
     hasOwnProperty,
+    isObject,
     isEmptyObject,
+    isEmpty,
     isWritableFormElement,
     getUniqueId,
     keyBy,

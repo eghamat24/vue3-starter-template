@@ -2,3 +2,9 @@
   display: block;
   color: $form-feedback-invalid-color;
 }
+
+.form-select-clear {
+    position: absolute;
+    right: $form-select-indicator-padding;
+    background-size: $form-select-bg-size;
+}
