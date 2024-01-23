@@ -40,7 +40,15 @@ function getUniqueId() {
     return 'uid_' + uniqueIdCount++;
 }
 
+/**
+ * @param {Null|String|Function} iteratee
+ * @returns {function(*): *}
+ */
 function resolveIteratee(iteratee) {
+    if (iteratee === null) {
+        return value => value;
+    }
+
     if (typeof iteratee === 'string') {
         return object => object[iteratee];
     }
@@ -112,6 +120,7 @@ export {
     isEmpty,
     isWritableFormElement,
     getUniqueId,
+    resolveIteratee,
     keyBy,
     cachePromise,
     normalizeData

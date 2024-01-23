@@ -8,6 +8,7 @@
             <div class="d-flex align-items-center">
                 <input
                     v-model="search"
+                    @input="handleSearch"
                     :id="id"
                     :placeholder="placeholder"
                     :disabled="disabled"
@@ -17,31 +18,43 @@
 
                 <button
                     v-if="clearable && !isEmpty(modelValue)"
-                    @click="clearInput"
+                    @click="clear"
                     class="form-select-clear btn-close"
                 />
             </div>
 
-            <ul :class="menuClassNames">
-                <li v-if="isLoading" class="ms-2">
-                    {{ $t('Loading') }}...
-                </li>
+            <ul :class="menuClassNames" style="max-height: 210px;">
+                <li
+                    v-if="isLoading"
+                    class="dropdown-item"
+                >{{ $t('Loading') }}...</li>
 
-                <li v-else-if="filteredItems.length === 0" class="ms-2">
-                    {{ $t('No data available') }}
-                </li>
+                <li
+                    v-else-if="items.length === 0"
+                    class="dropdown-item"
+                >{{ $t('No data available') }}</li>
+
+                <li
+                    v-else-if="filteredItems.length === 0"
+                    class="dropdown-item"
+                >{{ $t('No data found') }}</li>
 
                 <li
                     v-for="(item, index) in filteredItems"
-                    class="dropdown-item"
+                    :class="['dropdown-item text-truncate', { 'active': item.value === modelValue }]"
                     :key="index"
                     role="option"
-                    @click="selectItem(item)"
+                    @click="selectItem(item.value, item.text)"
                 >
-                    <slot name="item" :item="item">
-                        {{ itemTextFunction(item) }}
-                    </slot>
+                    <slot
+                        name="item"
+                        :item="item.raw"
+                        :value="item.value"
+                        :text="item.text"
+                    >{{ item.text }}</slot>
                 </li>
+
+                <VLazyLoadHelper tag="li" @reach="addFilteredItems"/>
             </ul>
 
             <div v-if="errors.length !== 0" class="invalid-text">{{ errors[0] }}</div>
@@ -50,24 +63,31 @@
 </template>
 
 <script>
-    import { computed, ref } from 'vue';
+    import { ref, computed, watch } from 'vue';
 
     // Utils
-    import { getUniqueId, isEmpty } from '@/utils';
+    import { isEmpty, getUniqueId, resolveIteratee } from '@/utils';
+
+    // Components
+    import VLazyLoadHelper from '@/components/VLazyLoadHelper.vue';
 
     // Composables
     import { useRegisterFormValidator } from '@/composables/validatation.composable';
     import { onClickOutside } from '@/composables/click.composable';
 
     // Enums
-    import ComponentSize from "@/enums/ComponentSize";
+    import ComponentSize from '@/enums/ComponentSize';
 
     export default {
         name: 'VAutoComplete',
 
+        components: {
+            VLazyLoadHelper
+        },
+
         props: {
             modelValue: {
-                default: null
+                required: true
             },
             id: {
                 type: String,
@@ -117,6 +137,8 @@
         emits: ['update:modelValue'],
 
         setup(props, { emit }) {
+            const { errors, isValid, validate } = useRegisterFormValidator();
+
             const isShowMenu = ref(false);
 
             function showMenu() {
@@ -141,56 +163,69 @@
             });
             const menuClassNames = computed(() => {
                 return {
-                    'dropdown-menu w-100 mt-1': true,
+                    'dropdown-menu w-100 overflow-y-auto overflow-x-hidden mt-1': true,
                     'show': isShowMenu.value
                 };
             });
 
-            const { errors, isValid, validate } = useRegisterFormValidator();
-
-            const itemKeyFunction = computed(() => {
-                if (props.itemKey === null) {
-                    return (item) => item;
-                }
-
-                if (typeof props.itemKey === 'string') {
-                    return (item) => item[props.itemKey];
-                }
-
-                return props.itemKey;
-            });
-            const itemTextFunction = computed(() => {
-                if (props.itemText === null) {
-                    return (item) => item;
-                }
-
-                if (typeof props.itemText === 'string') {
-                    return (item) => item[props.itemText];
-                }
-
-                return props.itemText;
-            });
+            const resolveItemKey = resolveIteratee(props.itemKey);
+            const resolveItemText = resolveIteratee(props.itemText);
 
             const search = ref('');
-            const filteredItems = computed(() => {
-                if (search.value.length === 0) {
-                    return props.items;
+
+            const filteredItems = ref([]);
+            const itemsPerPage = 10;
+            let lastIndex = -1;
+
+            function addFilteredItems() {
+                let count = 0;
+                let index;
+
+                const searchValue = search.value.toLowerCase();
+
+                for (index = lastIndex + 1; index < props.items.length; index++) {
+                    const item = props.items[index];
+                    const text = resolveItemText(item);
+
+                    if (searchValue.length > 0 && !text.toLowerCase().includes(searchValue)) {
+                        continue;
+                    }
+
+                    filteredItems.value.push({
+                        raw: item,
+                        value: resolveItemKey(item),
+                        text
+                    });
+
+                    count++;
+
+                    if (count === itemsPerPage) {
+                        break;
+                    }
                 }
 
-                return props.items.filter(item => {
-                    const text = itemTextFunction.value(item);
-                    return text.toLowerCase().includes(search.value.toLowerCase());
-                });
-            });
+                lastIndex = index;
+            }
 
-            let selectedItem;
+            function resetFilteredItems() {
+                lastIndex = -1;
+                filteredItems.value = [];
+            }
 
-            function selectItem(item) {
-                selectedItem = item;
+            function handleSearch() {
+                resetFilteredItems();
+                addFilteredItems();
+            }
 
-                emit('update:modelValue', itemKeyFunction.value(item));
+            watch(() => props.items, () => handleSearch());
 
-                search.value = itemTextFunction.value(item);
+            let selectedText;
+
+            function selectItem(value, text) {
+                selectedText = text;
+                search.value = text;
+
+                emit('update:modelValue', value);
 
                 hideMenu();
                 validate();
@@ -198,15 +233,13 @@
 
             const container = ref();
 
-            function onFocus() {
+            function onFocus(event) {
+                event.target.select();
+
                 showMenu();
 
                 const { off } = onClickOutside(container, function () {
-                    if (selectedItem) {
-                        search.value = itemTextFunction.value(selectedItem);
-                    } else {
-                        search.value = '';
-                    }
+                    search.value = selectedText || '';
 
                     hideMenu();
                     validate();
@@ -214,14 +247,19 @@
                 });
             }
 
-            function clearInput() {
-                emit('update:modelValue', undefined);
+            function clear() {
+                selectedText = undefined;
                 search.value = '';
-                selectedItem = undefined;
+
+                emit('update:modelValue', undefined);
+
+                handleSearch();
             }
 
             return {
                 isEmpty,
+
+                errors,
 
                 inputGroupClassNames,
                 inputClassNames,
@@ -229,21 +267,18 @@
 
                 isShowMenu,
 
-                itemTextFunction,
-
                 search,
-                filteredItems,
+                handleSearch,
 
-                errors,
-                validate,
+                filteredItems,
+                addFilteredItems,
 
                 selectItem,
 
                 container,
                 onFocus,
 
-                clearInput,
-
+                clear
             };
         }
     };
