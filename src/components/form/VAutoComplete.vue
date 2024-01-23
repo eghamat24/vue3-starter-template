@@ -27,7 +27,7 @@
                     {{ $t('Loading') }}...
                 </li>
 
-                <li v-if="filteredItems.length === 0" class="ms-2">
+                <li v-else-if="filteredItems.length === 0" class="ms-2">
                     {{ $t('No data available') }}
                 </li>
 
