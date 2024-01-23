@@ -23,16 +23,13 @@
 </template>
 
 <script>
-    import { computed, inject, onUnmounted, toRef } from 'vue';
+    import { computed } from 'vue';
 
     // Utils
     import { getUniqueId } from '@/utils';
 
     // Composables
-    import { useValidator } from '@/composables/validatation.composable';
-
-    // Components
-    import { FORM_INJECTION_KEY } from '@/components/form/VForm.vue';
+    import { useRegisterFormValidator } from '@/composables/validatation.composable';
 
     export default {
         name: 'VTextArea',
@@ -65,14 +62,7 @@
         emits: ['update:modelValue'],
 
         setup(props, context) {
-            const value = toRef(props, 'modelValue');
-            const rules = toRef(props, 'rules');
-
-            const { errors, isValid, validate, resetValidation } = useValidator(value, rules);
-
-            const formProvider = inject(FORM_INJECTION_KEY);
-            const registrationId = formProvider.register({ validate, resetValidation });
-            onUnmounted(() => formProvider.unregister(registrationId));
+            const { errors, isValid, validate } = useRegisterFormValidator();
 
             const inputClassNames = computed(() => {
                 return {

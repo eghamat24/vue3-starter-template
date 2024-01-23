@@ -48,17 +48,14 @@
 </template>
 
 <script>
-    import { computed, toRef, inject, onUnmounted, ref } from 'vue';
+    import { computed, ref } from 'vue';
 
     // Utils
     import { getUniqueId } from '@/utils';
 
     // Composables
-    import { useValidator } from '@/composables/validatation.composable';
+    import { useRegisterFormValidator } from '@/composables/validatation.composable';
     import { onClickOutside } from '@/composables/click.composable';
-
-    // Components
-    import { FORM_INJECTION_KEY } from '@/components/form/VForm.vue';
 
     // Enums
     import ComponentSize from "@/enums/ComponentSize";
@@ -148,14 +145,7 @@
                 };
             });
 
-            const value = toRef(props, 'modelValue');
-            const rules = toRef(props, 'rules');
-
-            const { errors, isValid, validate, resetValidation } = useValidator(value, rules);
-
-            const formProvider = inject(FORM_INJECTION_KEY);
-            const registrationId = formProvider.register({ validate, resetValidation });
-            onUnmounted(() => formProvider.unregister(registrationId));
+            const { errors, isValid, validate } = useRegisterFormValidator();
 
             const itemKeyFunction = computed(() => {
                 if (props.itemKey === null) {
