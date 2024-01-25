@@ -8,7 +8,7 @@
             <div class="d-flex align-items-center">
                 <input
                     v-model="search"
-                    @input="handleSearch"
+                    @input="resetFilteredItems"
                     :id="id"
                     :placeholder="placeholder"
                     :disabled="disabled"
@@ -39,22 +39,24 @@
                     class="dropdown-item"
                 >{{ $t('No data found') }}</li>
 
-                <li
-                    v-for="(item, index) in filteredItems"
-                    :class="['dropdown-item text-truncate', { 'active': item.value === modelValue }]"
-                    :key="index"
-                    role="option"
-                    @click="selectItem(item.value, item.text)"
-                >
-                    <slot
-                        name="item"
-                        :item="item.raw"
-                        :value="item.value"
-                        :text="item.text"
-                    >{{ item.text }}</slot>
-                </li>
+                <template v-else>
+                    <li
+                        v-for="(item, index) in filteredItems"
+                        :class="['dropdown-item text-truncate', { 'active': item.value === modelValue }]"
+                        :key="index"
+                        role="option"
+                        @click="selectItem(item)"
+                    >
+                        <slot
+                            name="item"
+                            :item="item.raw"
+                            :value="item.value"
+                            :text="item.text"
+                        >{{ item.text }}</slot>
+                    </li>
 
-                <VLazyLoadHelper tag="li" @reach="addFilteredItems"/>
+                    <VLazyLoadHelper tag="li" @reach="addFilteredItems"/>
+                </template>
             </ul>
 
             <div v-if="errors.length !== 0" class="invalid-text">{{ errors[0] }}</div>
@@ -194,7 +196,7 @@
                     filteredItems.value.push({
                         raw: item,
                         value: resolveItemKey(item),
-                        text
+                        text: text
                     });
 
                     count++;
@@ -210,26 +212,59 @@
             function resetFilteredItems() {
                 lastIndex = -1;
                 filteredItems.value = [];
-            }
 
-            function handleSearch() {
-                resetFilteredItems();
                 addFilteredItems();
             }
 
-            watch(() => props.items, () => handleSearch());
+            let selectedItem;
 
-            let selectedText;
+            function selectItem(item) {
+                selectedItem = item;
+                search.value = item.text;
 
-            function selectItem(value, text) {
-                selectedText = text;
-                search.value = text;
-
-                emit('update:modelValue', value);
+                emit('update:modelValue', item.value);
 
                 hideMenu();
                 validate();
             }
+
+            function syncWithModelValue() {
+                if (selectedItem !== undefined && selectedItem.value === props.modelValue) {
+                    return;
+                }
+
+                const selectedRawItem = props.items.find(function (item) {
+                    const value = resolveItemKey(item);
+                    return props.modelValue === value;
+                });
+
+                if (selectedRawItem === undefined) {
+                    return;
+                }
+
+                selectedItem = {
+                    raw: selectedRawItem,
+                    value: props.modelValue,
+                    text: resolveItemText(selectedRawItem)
+                };
+
+                search.value = selectedItem.text;
+            }
+
+            watch(
+                [
+                    () => props.modelValue,
+                    () => props.items
+                ],
+                function () {
+                    resetFilteredItems();
+
+                    if (!isEmpty(props.modelValue)) {
+                        syncWithModelValue();
+                    }
+                },
+                { immediate: true }
+            );
 
             const container = ref();
 
@@ -239,7 +274,7 @@
                 showMenu();
 
                 const { off } = onClickOutside(container, function () {
-                    search.value = selectedText || '';
+                    search.value = selectedItem !== undefined ? selectedItem.text : '';
 
                     hideMenu();
                     validate();
@@ -248,12 +283,12 @@
             }
 
             function clear() {
-                selectedText = undefined;
+                selectedItem = undefined;
                 search.value = '';
 
                 emit('update:modelValue', undefined);
 
-                handleSearch();
+                resetFilteredItems();
             }
 
             return {
@@ -268,10 +303,10 @@
                 isShowMenu,
 
                 search,
-                handleSearch,
 
                 filteredItems,
                 addFilteredItems,
+                resetFilteredItems,
 
                 selectItem,
 

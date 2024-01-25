@@ -7,7 +7,7 @@
         <div ref="container" :class="inputGroupClassNames">
             <div class="d-flex align-items-center">
                 <input
-                    :value="selectedItemText"
+                    :value="selectedItem?.text"
                     readonly
                     :id="id"
                     :placeholder="placeholder"
@@ -34,22 +34,24 @@
                     class="dropdown-item"
                 >{{ $t('No data available') }}</li>
 
-                <li
-                    v-for="(item, index) in paginatedItems"
-                    :class="['dropdown-item text-truncate', { 'active': item.value === modelValue }]"
-                    :key="index"
-                    role="option"
-                    @click="selectItem(item.value, item.text)"
-                >
-                    <slot
-                        name="item"
-                        :item="item.raw"
-                        :value="item.value"
-                        :text="item.text"
-                    >{{ item.text }}</slot>
-                </li>
+                <template v-else>
+                    <li
+                        v-for="(item, index) in paginatedItems"
+                        :class="['dropdown-item text-truncate', { 'active': item.value === modelValue }]"
+                        :key="index"
+                        role="option"
+                        @click="selectItem(item)"
+                    >
+                        <slot
+                            name="item"
+                            :item="item.raw"
+                            :value="item.value"
+                            :text="item.text"
+                        >{{ item.text }}</slot>
+                    </li>
 
-                <VLazyLoadHelper tag="li" @reach="addFilteredItems"/>
+                    <VLazyLoadHelper tag="li" @reach="addFilteredItems"/>
+                </template>
             </ul>
 
             <div v-if="errors.length !== 0" class="invalid-text">{{ errors[0] }}</div>
@@ -166,8 +168,6 @@
             const resolveItemKey = resolveIteratee(props.itemKey);
             const resolveItemText = resolveIteratee(props.itemText);
 
-            const selectedItemText = ref('');
-
             const paginatedItems = ref([]);
             const itemsPerPage = 10;
             let lastIndex = -1;
@@ -183,7 +183,7 @@
                     paginatedItems.value.push({
                         raw: item,
                         value: resolveItemKey(item),
-                        text
+                        text: text
                     });
 
                     count++;
@@ -199,21 +199,58 @@
             function resetPaginatedItems() {
                 lastIndex = -1;
                 paginatedItems.value = [];
+
+                addPaginatedItems();
             }
 
-            watch(() => props.items, function () {
-                resetPaginatedItems();
-                addPaginatedItems();
-            });
+            watch(() => props.items, () => resetPaginatedItems());
 
-            function selectItem(value, text) {
-                selectedItemText.value = text;
+            const selectedItem = ref(undefined);
 
-                emit('update:modelValue', value);
+            function selectItem(item) {
+                selectedItem.value = item;
+
+                emit('update:modelValue', item.value);
 
                 hideMenu();
                 validate();
             }
+
+            function syncWithModelValue() {
+                if (selectedItem.value !== undefined && selectedItem.value.value === props.modelValue) {
+                    return;
+                }
+
+                const selectedRawItem = props.items.find(function (item) {
+                    const value = resolveItemKey(item);
+                    return props.modelValue === value;
+                });
+
+                if (selectedRawItem === undefined) {
+                    return;
+                }
+
+                selectedItem.value = {
+                    raw: selectedRawItem,
+                    value: props.modelValue,
+                    text: resolveItemText(selectedRawItem)
+                };
+            }
+
+            watch(
+                [
+                    () => props.modelValue,
+                    () => props.items
+                ],
+                function () {
+                    resetPaginatedItems();
+
+                    if (!isEmpty(props.modelValue)) {
+                        syncWithModelValue();
+                    }
+                },
+                { immediate: true }
+            );
 
             const container = ref();
 
@@ -228,7 +265,7 @@
             }
 
             function clear() {
-                selectedItemText.value = '';
+                selectedItem.value = undefined;
                 emit('update:modelValue', undefined);
             }
 
@@ -243,11 +280,10 @@
 
                 isShowMenu,
 
-                selectedItemText,
-
                 paginatedItems,
                 addFilteredItems: addPaginatedItems,
 
+                selectedItem,
                 selectItem,
 
                 container,
