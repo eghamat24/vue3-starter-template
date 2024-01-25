@@ -24,4 +24,7 @@ export default {
     "Status": "Status",
     "Completed": "Completed",
     "Not completed": "Not completed",
+    "Filter by title": "Filter by title",
+    "Filter by user": "Filter by user",
+    "Filter by status": "Filter by status"
 };

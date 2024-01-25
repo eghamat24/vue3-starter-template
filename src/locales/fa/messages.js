@@ -24,4 +24,7 @@ export default {
     "Status": "وضعیت",
     "Completed": "تکمیل شده",
     "Not completed": "تکمیل نشده",
+    "Filter by title": "فیلتر بر اساس عنوان",
+    "Filter by user": "فیلتر بر اساس کاربر",
+    "Filter by status": "فیلتر بر اساس وضعیت"
 };
