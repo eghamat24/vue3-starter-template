@@ -9,7 +9,7 @@
                 <div class="modal-header">
                     <slot name="header">
                         <h5 class="modal-title">
-                            <slot name="title">{{ $t('Modal title') }}</slot>
+                            <slot name="title">{{ $t('Title') }}</slot>
                         </h5>
 
                         <button
@@ -22,7 +22,7 @@
                 </div>
 
                 <div class="modal-body">
-                    <slot name="body"></slot>
+                    <slot></slot>
                 </div>
 
                 <div class="modal-footer">
@@ -32,7 +32,7 @@
                             class="btn btn-secondary"
                             @click="hide"
                         >
-                            {{$t('cancel')}}
+                            {{$t('Cancel')}}
                         </button>
                     </slot>
                 </div>
