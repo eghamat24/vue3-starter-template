@@ -101,17 +101,23 @@
                 modal.value.style.display = display;
             }
 
+            function handleShow() {
+                setModalDisplay('block');
+                reflow(modal.value);
+                modal.value.classList.add('show');
+            }
+
+            function handleHide() {
+                modal.value.classList.remove('show');
+                executeAfterTransition(() => setModalDisplay(null), modal.value);
+            }
+
             function syncWithModelValue() {
                 if (props.modelValue) {
-                    setModalDisplay('block');
-                    reflow(modal.value);
-                    modal.value.classList.add('show');
-
+                    handleShow();
                     emit('show');
                 } else {
-                    modal.value.classList.remove('show');
-                    executeAfterTransition(() => setModalDisplay(null), modal.value);
-
+                    handleHide();
                     emit('hide');
                 }
             }
