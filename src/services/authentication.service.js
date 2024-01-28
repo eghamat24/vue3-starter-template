@@ -2,6 +2,9 @@ import ApiService from './api.service';
 import TokenService from './token.service';
 import PermissionService from './permission.service';
 
+// Enums
+import HttpHeader from '@/enums/HttpHeader';
+
 class AuthenticationService {
     /**
      * Login user
@@ -16,6 +19,7 @@ class AuthenticationService {
 
             TokenService.set(token);
             PermissionService.set(['dashboard']);
+            ApiService.setHeader(HttpHeader.AUTHORIZATION, `Bearer ${TokenService.get()}`);
 
             return response;
         });

@@ -7,9 +7,12 @@ import AuthenticateUser from '@/services/middleware/AuthenticateUser';
 import HttpHeader from '@/enums/HttpHeader';
 import MimeType from '@/enums/MimeType';
 
-ApiService.setHeader(HttpHeader.AUTHORIZATION, `Bearer ${TokenService.get()}`);
 ApiService.setHeader(HttpHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON);
 ApiService.addResponseMiddleware(AuthenticateUser);
+
+if (TokenService.isExist()) {
+    ApiService.setHeader(HttpHeader.AUTHORIZATION, `Bearer ${TokenService.get()}`);
+}
 
 if (LanguageService.isRtl()) {
     import('@/assets/scss/app-rtl.scss');
