@@ -1,22 +1,23 @@
 <template>
     <div
-        ref="modal"
         class="modal fade backdrop"
+        tabindex="-1"
+        ref="modal"
         @click.self="hide"
     >
         <div :class="dialogClassName">
             <div class="modal-content">
                 <div class="modal-header">
                     <slot name="header">
-                        <h5 class="modal-title">
+                        <div class="modal-title h5">
                             <slot name="title">{{ $t('Title') }}</slot>
-                        </h5>
+                        </div>
 
                         <button
-                            @click="hide"
                             type="button"
                             class="btn-close"
                             aria-label="Close"
+                            @click="hide"
                         />
                     </slot>
                 </div>
@@ -31,9 +32,7 @@
                             type="button"
                             class="btn btn-secondary"
                             @click="hide"
-                        >
-                            {{$t('Cancel')}}
-                        </button>
+                        >{{ $t('Cancel') }}</button>
                     </slot>
                 </div>
             </div>
@@ -42,7 +41,7 @@
 </template>
 
 <script>
-    import { ref, computed, watch } from 'vue';
+    import { ref, computed, watch, nextTick } from 'vue';
 
     // Enums
     import ComponentSize from '@/enums/ComponentSize';
@@ -54,7 +53,7 @@
         name: 'VModal',
 
         props: {
-            show: {
+            modelValue: {
                 type: Boolean,
                 required: true
             },
@@ -81,31 +80,29 @@
             }
         },
 
-        emits: ['update:show', 'show', 'hide'],
+        emits: ['update:modelValue', 'show', 'hide'],
 
         setup(props, { emit }) {
             const dialogClassName = computed(() => {
                 return {
-                    'modal-dialog': true,
-                    'modal-dialog-centered': true,
-                    'modal-dialog-scrollable': true,
-                    [`modal-${props.size}`]: props.size,
-                    [`modal-fullscreen-${props.mobileBreakpoint}-down`]: props.mobileBreakpoint
+                    'modal-dialog modal-dialog-centered modal-dialog-scrollable': true,
+                    [`modal-${props.size}`]: Boolean(props.size),
+                    [`modal-fullscreen-${props.mobileBreakpoint}-down`]: Boolean(props.mobileBreakpoint)
                 }
             });
 
-            const modal = ref(null);
-
             function hide() {
-                emit('update:show', false);
+                emit('update:modelValue', false);
             }
+
+            const modal = ref();
 
             function setModalDisplay(display) {
                 modal.value.style.display = display;
             }
 
-            watch(() => props.show, (value) => {
-                if (value) {
+            function syncWithModelValue() {
+                if (props.modelValue) {
                     setModalDisplay('block');
                     reflow(modal.value);
                     modal.value.classList.add('show');
@@ -117,12 +114,20 @@
 
                     emit('hide');
                 }
-            });
+            }
+
+            watch(() => props.modelValue, function () {
+                if (modal.value !== undefined) {
+                    syncWithModelValue();
+                } else {
+                    nextTick(() => syncWithModelValue());
+                }
+            }, { immediate: true });
 
             return {
                 dialogClassName,
                 modal,
-                hide,
+                hide
             };
         }
     }
