@@ -1,5 +1,5 @@
 <template>
-    <header class="header d-flex align-items-center bg-primary text-white px-2">
+    <header class="header d-flex align-items-center bg-primary px-2">
         <button
             type="submit"
             class="btn btn-sm text-white"
@@ -9,7 +9,7 @@
 
         <div class="px-2">
             <slot name="start">
-                <div class="h5 mb-0">Eghamat24</div>
+                <div class="h5 text-white mb-0">Eghamat24</div>
             </slot>
         </div>
 
@@ -17,7 +17,7 @@
             <slot name="end"></slot>
 
             <button
-                type="submit"
+                type="button"
                 class="btn btn-sm text-white"
                 @click="logout"
             >

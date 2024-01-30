@@ -8,7 +8,7 @@
             <VSideMenu />
         </slot>
 
-        <div class="col bg-light p-4">
+        <div class="col bg-body-tertiary p-4">
             <slot>Content</slot>
         </div>
     </main>
