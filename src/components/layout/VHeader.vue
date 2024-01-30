@@ -16,6 +16,8 @@
         <div class="ms-auto">
             <slot name="end"></slot>
 
+            <AppSettings />
+
             <button
                 type="button"
                 class="btn btn-sm text-white"
@@ -28,13 +30,20 @@
 </template>
 
 <script>
-    import { useRouter } from "vue-router";
+    import { useRouter } from 'vue-router';
+
+    // Components
+    import AppSettings from '@/components/layout/AppSettings.vue';
 
     // Services
-    import AuthenticationService from "@/services/authentication.service";
+    import AuthenticationService from '@/services/authentication.service';
 
     export default {
         name: 'VHeader',
+
+        components: {
+            AppSettings
+        },
 
         setup() {
             const router = useRouter();

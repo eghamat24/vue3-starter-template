@@ -3,6 +3,7 @@ export default {
     "Username": "Username",
     "Password": "Password",
     "Submit": "Submit",
+    "Cancel": "Cancel",
     "Dashboard": "Dashboard",
     "Users": "Users",
     "Authorization Error": "Authorization Error",
@@ -26,5 +27,11 @@ export default {
     "Not completed": "Not completed",
     "Filter by title": "Filter by title",
     "Filter by user": "Filter by user",
-    "Filter by status": "Filter by status"
+    "Filter by status": "Filter by status",
+    "Language": "Language",
+    "Theme": "Theme",
+    "Light": "Light",
+    "Dark": "Dark",
+    "System": "System",
+    "Settings": "Settings",
 };

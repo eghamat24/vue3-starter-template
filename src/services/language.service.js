@@ -31,8 +31,8 @@ class LanguageService {
      * @returns void
      */
     static set(value) {
-        vueI18N.global.locale = value;
         StorageService.set(this.STORAGE_KEY, value);
+        location.reload();
     }
 
     /**

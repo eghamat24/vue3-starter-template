@@ -3,6 +3,7 @@ export default {
     "Username": "نام کاریری",
     "Password": "رمز عبور",
     "Submit": "ارسال",
+    "Cancel": "انصراف",
     "Dashboard": "داشبورد",
     "Users": "کاربران",
     "Authorization Error": "خطای دسترسی",
@@ -26,5 +27,11 @@ export default {
     "Not completed": "تکمیل نشده",
     "Filter by title": "فیلتر بر اساس عنوان",
     "Filter by user": "فیلتر بر اساس کاربر",
-    "Filter by status": "فیلتر بر اساس وضعیت"
+    "Filter by status": "فیلتر بر اساس وضعیت",
+    "Language": "زبان",
+    "Theme": "زمینه",
+    "Light": "روشن",
+    "Dark": "تیره",
+    "System": "سیستم",
+    "Settings": "تنظیمات",
 };
