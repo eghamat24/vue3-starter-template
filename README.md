@@ -1,5 +1,8 @@
 # vue3-starter-template
 
+[![en](https://img.shields.io/badge/lang-en-red.svg)](https://github.com/eghamat24/vue3-starter-template/blob/main/README.md)
+[![fa](https://img.shields.io/badge/lang-fa-red.svg)](https://github.com/eghamat24/vue3-starter-template/blob/main/README.fa.md)
+
 This template should help get you started developing with Vue 3 in Vite.
 
 ## Recommended IDE Setup
