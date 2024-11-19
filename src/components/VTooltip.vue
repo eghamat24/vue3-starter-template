@@ -2,11 +2,7 @@
 <slot name="activator" :on="listeners"></slot>
 
 <Teleport to="body">
-    <div
-        v-if="isShown"
-        :class="tooltipClassNames"
-        ref="tooltip"
-    >
+    <div v-if="isShown" :class="tooltipClassNames" ref="tooltip">
         <slot></slot>
     </div>
 
