@@ -1,18 +1,25 @@
 <script>
-import { h, reactive, computed, provide } from 'vue';
+import {computed, h, provide, reactive} from 'vue';
 
 // Utils
-import { getUniqueId } from '@/utils';
+import {getUniqueId} from '@/utils';
 
 export const FORM_INJECTION_KEY = 'FormProvider';
 
 export default {
     name: 'VForm',
 
-    emits: ['submit'],
+    emits: ['submit', 'update:isValid'],
 
+    props: {
+        isValid: {
+            default: false,
+            required: false
+        }
+    },
     setup(props, context) {
         const inputs = reactive({});
+
 
         function validate() {
             for (const id in inputs) {
@@ -20,6 +27,7 @@ export default {
                 input.is_valid = input.validate();
             }
         }
+
 
         function resetValidation() {
             for (const id in inputs) {
@@ -57,15 +65,21 @@ export default {
             return true;
         });
 
+
         function handleSubmit(event) {
             event.preventDefault();
 
             validate();
 
             if (isValid.value === true) {
+                context.emit('update:isValid', true)
                 context.emit('submit', event);
+            } else {
+                context.emit('update:isValid', false)
+                context.emit('isValid', isValid.value)
             }
         }
+
 
         function renderSubmitter() {
             return h('input', {
@@ -76,7 +90,7 @@ export default {
 
         return () => h(
             'form',
-            { onSubmit: handleSubmit, onReset: resetValidation },
+            {onSubmit: handleSubmit, onReset: resetValidation},
             [context.slots.default(), renderSubmitter()]
         );
     }
