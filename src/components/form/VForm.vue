@@ -18,8 +18,8 @@ export default {
         }
     },
     setup(props, context) {
-        const inputs = reactive({});
 
+        const inputs = reactive({});
 
         function validate() {
             for (const id in inputs) {
@@ -39,13 +39,11 @@ export default {
         provide(FORM_INJECTION_KEY, {
             register(input) {
                 const id = getUniqueId();
-
                 inputs[id] = {
                     is_valid: false,
                     validate: input.validate,
-                    resetValidation: input.resetValidation
+                    resetValidation: input.resetValidation,
                 };
-
                 return id;
             },
             unregister(id) {
@@ -53,18 +51,18 @@ export default {
             }
         });
 
+
         const isValid = computed(() => {
+
             for (const id in inputs) {
                 const input = inputs[id];
-
-                if (input.is_valid === false) {
+                if (!input.value) {
                     return false;
                 }
             }
 
             return true;
         });
-
 
         function handleSubmit(event) {
             event.preventDefault();

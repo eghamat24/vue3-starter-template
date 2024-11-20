@@ -1,39 +1,30 @@
 <template>
-    <label v-if="$slots.label" class="form-label" :for="id">
-        <slot name="label"></slot>
-    </label>
+<label v-if="$slots.label" class="form-label" :for="id">
+    <slot name="label"></slot>
+</label>
 
-    <div class="input-group has-validation">
-        <slot name="prepend"></slot>
 
-        <input
-            :value="modelValue"
-            @input="handleInput"
-            @blur="validate"
-            :id="id"
-            :type="type"
-            :placeholder="placeholder"
-            :disabled="disabled"
-            :class="inputClassNames"
-        />
+<div class="input-group has-validation">
+    <slot name="prepend"></slot>
 
-        <slot name="append"></slot>
+    <input :value="modelValue" @input="handleInput" @blur="validate" :id="id" :type="type"
+           :placeholder="placeholder" :disabled="disabled" :class="inputClassNames"/>
 
-        <div
-            v-if="errors.length !== 0"
-            class="invalid-feedback"
-        >{{ errors[0] }}</div>
+    <slot name="append"></slot>
+
+    <div v-if="errors.length !== 0" class="invalid-feedback">{{ errors[0] }}
     </div>
+</div>
 </template>
 
 <script>
-import { computed } from 'vue';
+import {computed} from 'vue';
 
 // Utils
-import { getUniqueId, isWritableFormElement } from '@/utils';
+import {getUniqueId, isWritableFormElement} from '@/utils';
 
 // Composables
-import { useRegisterFormValidator } from '@/composables/validatation.composable';
+import {useRegisterFormValidator} from '@/composables/validatation.composable';
 
 export default {
     name: 'VInput',
@@ -68,7 +59,7 @@ export default {
     emits: ['update:modelValue'],
 
     setup(props, context) {
-        const { errors, isValid, validate } = useRegisterFormValidator();
+        const {errors, isValid, validate} = useRegisterFormValidator();
 
         const inputClassNames = computed(() => {
             const classNames = ['form-control'];
@@ -84,13 +75,12 @@ export default {
             context.emit('update:modelValue', event.target.value);
         }
 
+
         return {
             errors,
             validate,
-
             inputClassNames,
-
-            handleInput
+            handleInput,
         };
     }
 };

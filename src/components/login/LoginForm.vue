@@ -1,8 +1,8 @@
 <template>
 <VForm v-model:isValid="isValid" @submit="submit">
+    {{ isValid }}
     <div class="mb-3">
         <VInput
-
             v-model="formData.username"
             placeholder="anything..."
             :rules="[Validator.required()]"
@@ -54,11 +54,13 @@ import {t} from "@/services/language.service";
 // Enums
 import ThemeColor from "@/enums/ThemeColor";
 import HttpStatusCode from "@/enums/HttpStatusCode";
+import VAutoComplete from "@/components/form/VAutoComplete.vue";
 
 export default {
     name: 'LoginForm',
 
     components: {
+        VAutoComplete,
         VForm,
         VInput
     },
@@ -77,8 +79,7 @@ export default {
         const router = useRouter();
 
         function submit() {
-            console.log('hi')
-            return
+
             startLoading();
 
             AuthenticationService.login(formData).then(function () {
