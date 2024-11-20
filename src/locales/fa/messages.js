@@ -1,6 +1,6 @@
 export default {
     "Login": "ورود",
-    "Username": "نام کاریری",
+    "Username": "نام کاربری",
     "Password": "رمز عبور",
     "Submit": "ارسال",
     "Cancel": "انصراف",
@@ -34,4 +34,5 @@ export default {
     "Dark": "تیره",
     "System": "سیستم",
     "Settings": "تنظیمات",
+    "SaveMe" :"مرا به خاطر بسپار"
 };
