@@ -2,18 +2,15 @@
     <slot name="activator" :on="listeners"></slot>
 
     <Teleport to="body">
-        <div
-            v-if="isShown"
-            :class="tooltipClassNames"
-            ref="tooltip"
-        >
+        <div v-if="isShown" :class="tooltipClassNames" ref="tooltip">
             <slot></slot>
         </div>
+
     </Teleport>
 </template>
 
 <script>
-    import { computed, nextTick, ref } from 'vue';
+    import {computed, nextTick, ref} from 'vue';
 
     // Enums
     import ComponentPosition from '@/enums/ComponentPosition';
@@ -47,36 +44,42 @@
                 validator(value) {
                     return Object.values(ThemeColor).includes(value);
                 }
+            },
+            autoClose: {
+                type: Boolean,
+                default: false,
+
+            },
+            autoCloseTime: {
+                type: Number,
+                default: 1000,
             }
         },
 
         setup(props) {
             const listeners = computed(() => {
                 const result = {};
-
                 switch (props.trigger) {
                     case ComponentTrigger.HOVER:
                         result.mouseenter = show;
                         result.mouseleave = hide;
-                        break;
+                        break
                     case ComponentTrigger.CLICK:
                         result.click = toggle;
-                        break;
+                        break
 
                     case ComponentTrigger.FOCUS:
                         result.focus = show;
                         result.blur = hide;
-                        break;
+                        break
                 }
-
 
                 return result
             });
-
-            const tooltip = ref();
+            const tooltip = ref(null);
             const tooltipClassNames = computed(() => {
                 return {
-                    'tooltip show px-2 py-1 rounded-2': true,
+                    'tooltip px-2 py-1 rounded-2': true,
                     [`bg-${props.theme}`]: true,
                     ['tooltip-' + props.position]: true
                 };
@@ -86,14 +89,12 @@
 
             function show(event) {
                 isShown.value = true;
-
                 const rect = event.target.getBoundingClientRect();
-
                 nextTick(() => {
+                    const tooltipRect = tooltip.value.getBoundingClientRect()
                     switch (props.position) {
                         case ComponentPosition.TOP:
-                            tooltip.value.style.top = rect.top + window.scrollY + 'px';
-                            tooltip.value.style.left = rect.left + (rect.width / 2) + 'px';
+                            addTooltipToTop(rect)
                             break;
 
                         case ComponentPosition.BOTTOM:
@@ -102,27 +103,48 @@
                             break;
 
                         case ComponentPosition.START:
-                            tooltip.value.style.top = rect.top + window.scrollY - rect.height + 'px';
-
                             if (LanguageService.isRtl()) {
-                                tooltip.value.style.left = rect.left + rect.width + 'px';
+                                if (isSpaceRight(rect, tooltipRect)) {
+                                    addTooltipToTop(rect)
+                                    break;
+                                } else {
+                                    addTooltipToStart(rect, tooltipRect)
+                                    break
+                                }
                             } else {
-                                tooltip.value.style.left = rect.left - tooltip.value.clientWidth + 'px';
+                                if (isSpaceLeft(rect, tooltipRect)) {
+                                    addTooltipToTop(rect)
+                                    break;
+                                } else {
+                                    addTooltipToStart(rect, tooltipRect)
+                                    break
+                                }
                             }
 
-                            break;
 
                         case ComponentPosition.END:
-                            tooltip.value.style.top = rect.top + window.scrollY - rect.height + 'px';
-
                             if (LanguageService.isRtl()) {
-                                tooltip.value.style.left = rect.left - tooltip.value.clientWidth + 'px';
+                                if (isSpaceLeft(rect, tooltipRect)) {
+                                    addTooltipToTop(rect)
+                                    break;
+                                } else {
+                                    addTooltipToEnd(rect, tooltipRect)
+                                    break
+                                }
                             } else {
-                                tooltip.value.style.left = rect.left + rect.width + 'px';
-                            }
+                                if (isSpaceRight(rect, tooltipRect)) {
+                                    addTooltipToTop(rect)
+                                    break;
+                                } else {
+                                    addTooltipToEnd(rect, tooltipRect)
 
-                            break;
+
+                                    break
+                                }
+                            }
                     }
+                    tooltip.value.classList.add('show')
+                    autoClose()
                 });
             }
 
@@ -136,6 +158,57 @@
                 } else {
                     hide();
                 }
+            }
+
+            function isSpaceRight(rect, tooltipRect) {
+                const rightPosition = rect.left + rect.width;
+                return (rightPosition + tooltipRect.width) >= window.innerWidth;
+            }
+
+            function isSpaceLeft(rect, tooltipRect) {
+                return rect.left < tooltipRect.width;
+            }
+
+            function addTooltipToTop(rect) {
+                if (LanguageService.isRtl()) {
+                    tooltip.value.style.top = rect.top + window.scrollY - 5 + 'px';
+                    tooltip.value.style.left = rect.right - (rect.width / 2) + 'px';
+                    tooltip.value.classList.remove("tooltip-start")
+                    tooltip.value.classList.add("tooltip-top")
+                } else {
+                    tooltip.value.style.top = rect.top + window.scrollY - 5 + 'px';
+                    tooltip.value.style.left = rect.right - (rect.width / 2) + 'px';
+                    tooltip.value.classList.remove("tooltip-start")
+                    tooltip.value.classList.add("tooltip-top")
+                }
+            }
+
+            function addTooltipToStart(rect, tooltipRect) {
+                if (LanguageService.isRtl()) {
+                    tooltip.value.style.left = rect.left + rect.width + 5 + 'px';
+                    tooltip.value.style.top = rect.bottom + window.scrollY - ((tooltipRect.height + rect.height) / 2) + 'px';
+                } else {
+                    tooltip.value.style.left = rect.left - tooltipRect.width - 5 + 'px';
+                    tooltip.value.style.top = rect.bottom + window.scrollY - ((tooltipRect.height + rect.height) / 2) + 'px';
+                }
+            }
+
+            function addTooltipToEnd(rect, tooltipRect) {
+                if (LanguageService.isRtl()) {
+                    tooltip.value.style.left = rect.left - tooltipRect.width - 5 + 'px';
+                    tooltip.value.style.top = rect.bottom + window.scrollY - ((tooltipRect.height + rect.height) / 2) + 'px';
+                } else {
+                    tooltip.value.style.left = rect.left + rect.width + 5 + 'px';
+                    tooltip.value.style.top = rect.bottom + window.scrollY - ((tooltipRect.height + rect.height) / 2) + 'px';
+                }
+            }
+
+            function autoClose() {
+                setTimeout(() => {
+                    if (props.autoClose && props.trigger !== ComponentTrigger.HOVER) {
+                        isShown.value = false
+                    }
+                }, props.autoCloseTime)
             }
 
             return {
