@@ -1,5 +1,5 @@
 <script>
-import {computed, h, provide, reactive} from 'vue';
+import {computed, h, provide, reactive, ref, watch} from 'vue';
 
 // Utils
 import {getUniqueId} from '@/utils';
@@ -9,7 +9,7 @@ export const FORM_INJECTION_KEY = 'FormProvider';
 export default {
     name: 'VForm',
 
-    emits: ['submit', 'update:isValid'],
+    emits: ['submit', 'update:isValidForm'],
 
     props: {
         isValid: {
@@ -18,13 +18,28 @@ export default {
         }
     },
     setup(props, context) {
-
+        const isValidForm = ref(true)
         const inputs = reactive({});
+        watch(() => inputs, (newValue) => validateOnChange(newValue), {deep: true})
 
         function validate() {
             for (const id in inputs) {
                 const input = inputs[id];
                 input.is_valid = input.validate();
+            }
+        }
+
+        function validateOnChange(newValue) {
+            for (const id in newValue) {
+                const input = inputs[id];
+                if (!input.handleValidateGlobal()) {
+                    isValidForm.value = false
+                    context.emit('update:isValidForm', isValidForm.value)
+                    return
+                } else {
+                    isValidForm.value = true
+                    context.emit('update:isValidForm', isValidForm.value)
+                }
             }
         }
 
@@ -40,6 +55,8 @@ export default {
             register(input) {
                 const id = getUniqueId();
                 inputs[id] = {
+                    handleValidateGlobal: input.handleValidateGlobal,
+                    value: input.value,
                     is_valid: false,
                     validate: input.validate,
                     resetValidation: input.resetValidation,
@@ -53,7 +70,6 @@ export default {
 
 
         const isValid = computed(() => {
-
             for (const id in inputs) {
                 const input = inputs[id];
                 if (!input.value) {
@@ -70,10 +86,10 @@ export default {
             validate();
 
             if (isValid.value === true) {
-                context.emit('update:isValid', true)
+                context.emit('update:isValidForm', true)
                 context.emit('submit', event);
             } else {
-                context.emit('update:isValid', false)
+                context.emit('update:isValidForm', false)
                 context.emit('isValid', isValid.value)
             }
         }

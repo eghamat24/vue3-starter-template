@@ -1,6 +1,5 @@
 <template>
-<VForm v-model:isValid="isValid" @submit="submit">
-    {{ isValid }}
+<VForm v-model:isValidForm="isValidForm" @submit="submit">
     <div class="mb-3">
         <VInput
             v-model="formData.username"
@@ -70,7 +69,7 @@ export default {
             username: '',
             password: ''
         });
-        const isValid = ref(false)
+        const isValidForm = ref(false)
 
         const {isLoading, startLoading, endLoading} = useLoading();
         const {showToast} = useToast();
@@ -105,7 +104,7 @@ export default {
 
         return {
             Validator,
-            isValid,
+            isValidForm,
             isLoading,
             formData,
             submit
