@@ -1,13 +1,18 @@
 @import "bootstrap/scss/tooltip";
 
 .tooltip {
-  position: absolute;
+    position: absolute;
 
-  &-top {
-    transform: translate(50%, -100%);
-  }
+    &-top {
+        transform: translate(50%, -100%);
+    }
 
-  &-bottom {
-    transform: translateX(50%);
-  }
+    &-bottom {
+        transform: translateX(50%);
+    }
+
+    &.show {
+        transition: all 0.3s;
+    }
 }
+
