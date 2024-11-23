@@ -1,5 +1,5 @@
 <template>
-    <VForm @submit="submit">
+    <VForm v-model:isValidForm="isValidForm" @submit="submit">
         <div class="mb-3">
             <VInput
                 v-model="formData.username"
@@ -30,7 +30,7 @@
 </template>
 
 <script>
-    import { reactive } from "vue";
+    import { reactive , ref } from "vue";
     import { useRoute, useRouter } from "vue-router";
 
     // Components
@@ -65,6 +65,7 @@
                 username: '',
                 password: ''
             });
+            const isValidForm = ref(false)
 
             const { isLoading, startLoading, endLoading } = useLoading();
             const { showToast } = useToast();
@@ -98,7 +99,7 @@
 
             return {
                 Validator,
-
+                isValidForm,
                 isLoading,
                 formData,
                 submit

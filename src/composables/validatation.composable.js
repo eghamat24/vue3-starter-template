@@ -8,6 +8,7 @@ import { FORM_INJECTION_KEY } from '@/components/form/VForm.vue';
 
 export function useValidator(value, rules, validateOnChange = true) {
     const validator = new Validator(value.value, rules.value);
+    const isFirstCreateValidation = ref(true)
 
     const errors = ref([]);
     const isValid = computed(() => errors.value.length === 0);
@@ -31,11 +32,29 @@ export function useValidator(value, rules, validateOnChange = true) {
         errors.value = [];
     }
 
+    function handleValidateGlobal() {
+        if (isFirstCreateValidation.value) {
+            isFirstCreateValidation.value = false
+            return
+        }
+
+        let validInput
+
+        validator.setValue(value.value);
+        validator.setRules(rules.value);
+        errors.value = validator.errors();
+        validInput = errors.value.length === 0
+        errors.value = [];
+        return validInput;
+
+    }
+
     return {
         errors,
         isValid,
         validate,
-        resetValidation
+        resetValidation ,
+        handleValidateGlobal
     };
 }
 
@@ -45,10 +64,10 @@ export function useRegisterFormValidator(validateOnChange = true, valuePropName 
     const value = toRef(instance.props, valuePropName);
     const rules = toRef(instance.props, rulesPropName);
 
-    const { errors, isValid, validate, resetValidation } = useValidator(value, rules, validateOnChange);
+    const { errors, isValid, validate, resetValidation , handleValidateGlobal } = useValidator(value, rules, validateOnChange);
 
     const formProvider = inject(FORM_INJECTION_KEY);
-    const registrationId = formProvider.register({ validate, resetValidation });
+    const registrationId = formProvider.register({ validate, resetValidation , handleValidateGlobal , value });
     onUnmounted(() => formProvider.unregister(registrationId));
 
     return {

@@ -1,84 +1,112 @@
 <script>
-import { h, reactive, computed, provide } from 'vue';
+    import { computed , h , provide , reactive , ref , watch } from 'vue';
 
-// Utils
-import { getUniqueId } from '@/utils';
+    // Utils
+    import {getUniqueId} from '@/utils';
 
-export const FORM_INJECTION_KEY = 'FormProvider';
+    export const FORM_INJECTION_KEY = 'FormProvider';
 
-export default {
-    name: 'VForm',
+    export default {
+        name: 'VForm',
 
-    emits: ['submit'],
+        emits: ['submit', 'update:isValidForm'],
 
-    setup(props, context) {
-        const inputs = reactive({});
-
-        function validate() {
-            for (const id in inputs) {
-                const input = inputs[id];
-                input.is_valid = input.validate();
+        props: {
+            isValid: {
+                default: false,
+                required: false
             }
-        }
+        },
+        setup(props, context) {
+            const isValidForm = ref(true)
+            const inputs = reactive({});
+            watch(() => inputs, (newValue) => validateOnChange(newValue), {deep: true})
 
-        function resetValidation() {
-            for (const id in inputs) {
-                const input = inputs[id];
-                input.resetValidation();
-            }
-        }
-
-        provide(FORM_INJECTION_KEY, {
-            register(input) {
-                const id = getUniqueId();
-
-                inputs[id] = {
-                    is_valid: false,
-                    validate: input.validate,
-                    resetValidation: input.resetValidation
-                };
-
-                return id;
-            },
-            unregister(id) {
-                delete inputs[id];
-            }
-        });
-
-        const isValid = computed(() => {
-            for (const id in inputs) {
-                const input = inputs[id];
-
-                if (input.is_valid === false) {
-                    return false;
+            function validate() {
+                for (const id in inputs) {
+                    const input = inputs[id];
+                    input.is_valid = input.validate();
                 }
             }
 
-            return true;
-        });
-
-        function handleSubmit(event) {
-            event.preventDefault();
-
-            validate();
-
-            if (isValid.value === true) {
-                context.emit('submit', event);
+            function validateOnChange(newValue) {
+                for (const id in newValue) {
+                    const input = inputs[id];
+                    if (!input.handleValidateGlobal()) {
+                        isValidForm.value = false
+                        context.emit('update:isValidForm', isValidForm.value)
+                        return
+                    } else {
+                        isValidForm.value = true
+                        context.emit('update:isValidForm', isValidForm.value)
+                    }
+                }
             }
-        }
 
-        function renderSubmitter() {
-            return h('input', {
-                type: 'submit',
-                class: 'visually-hidden'
+
+            function resetValidation() {
+                for (const id in inputs) {
+                    const input = inputs[id];
+                    input.resetValidation();
+                }
+            }
+
+            provide(FORM_INJECTION_KEY, {
+                register(input) {
+                    const id = getUniqueId();
+                    inputs[id] = {
+                        handleValidateGlobal: input.handleValidateGlobal,
+                        value: input.value,
+                        is_valid: false,
+                        validate: input.validate,
+                        resetValidation: input.resetValidation,
+                    };
+                    return id;
+                },
+                unregister(id) {
+                    delete inputs[id];
+                }
             });
-        }
 
-        return () => h(
-            'form',
-            { onSubmit: handleSubmit, onReset: resetValidation },
-            [context.slots.default(), renderSubmitter()]
-        );
-    }
-};
+
+            const isValid = computed(() => {
+                for (const id in inputs) {
+                    const input = inputs[id];
+                    if (!input.value) {
+                        return false;
+                    }
+                }
+
+                return true;
+            });
+
+            function handleSubmit(event) {
+                event.preventDefault();
+
+                validate();
+
+                if (isValid.value === true) {
+                    context.emit('update:isValidForm', true)
+                    context.emit('submit', event);
+                } else {
+                    context.emit('update:isValidForm', false)
+                    context.emit('isValid', isValid.value)
+                }
+            }
+
+
+            function renderSubmitter() {
+                return h('input', {
+                    type: 'submit',
+                    class: 'visually-hidden'
+                });
+            }
+
+            return () => h(
+                'form',
+                {onSubmit: handleSubmit, onReset: resetValidation},
+                [context.slots.default(), renderSubmitter()]
+            );
+        }
+    };
 </script>
