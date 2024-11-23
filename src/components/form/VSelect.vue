@@ -23,16 +23,18 @@
                 />
             </div>
 
-            <ul :class="menuClassNames" style="max-height: 210px;">
+            <ul ref="dropdownMenu" :class="menuClassNames" style="max-height: 210px;">
                 <li
                     v-if="isLoading"
                     class="dropdown-item"
-                >{{ $t('Loading') }}...</li>
+                >{{ $t('Loading') }}...
+                </li>
 
                 <li
                     v-else-if="items.length === 0"
                     class="dropdown-item"
-                >{{ $t('No data available') }}</li>
+                >{{ $t('No data available') }}
+                </li>
 
                 <template v-else>
                     <li
@@ -47,7 +49,8 @@
                             :item="item.raw"
                             :value="item.value"
                             :text="item.text"
-                        >{{ item.text }}</slot>
+                        >{{ item.text }}
+                        </slot>
                     </li>
 
                     <VLazyLoadHelper tag="li" @reach="addFilteredItems"/>
@@ -60,7 +63,7 @@
 </template>
 
 <script>
-    import { ref, computed, watch } from 'vue';
+    import { ref, computed, watch, nextTick } from 'vue';
 
     // Utils
     import { isEmpty, getUniqueId, resolveIteratee } from '@/utils';
@@ -135,15 +138,30 @@
 
         setup(props, { emit }) {
             const { errors, isValid, validate } = useRegisterFormValidator();
-
+            const dropdownMenu = ref()
             const isShowMenu = ref(false);
+            const isShowSelectsTop = ref(false);
 
             function showMenu() {
+                const containerRect = container.value.getBoundingClientRect()
+                let dropDownPositionFromTop = containerRect.top
                 isShowMenu.value = true;
+                nextTick(() => {
+                    const dropDownRect = dropdownMenu.value.getBoundingClientRect()
+                    dropDownPositionFromTop += dropDownRect.height
+                    if (dropDownPositionFromTop > window.innerHeight) {
+                        isShowSelectsTop.value = true
+                        document.documentElement.style.setProperty('--topPositionSelect', `calc(-100% + ${container.value.getBoundingClientRect().height}px - ${dropdownMenu.value.getBoundingClientRect().height}px)`);
+                    }
+                })
+
             }
 
             function hideMenu() {
                 isShowMenu.value = false;
+                if (isShowSelectsTop.value) {
+                    isShowSelectsTop.value = false
+                }
             }
 
             const inputGroupClassNames = computed(() => {
@@ -160,8 +178,10 @@
             });
             const menuClassNames = computed(() => {
                 return {
-                    'dropdown-menu w-100 overflow-y-auto overflow-x-hidden mt-1': true,
-                    'show': isShowMenu.value
+                    'dropdown-menu w-100 overflow-y-auto overflow-x-hidden ': true,
+                    'show': isShowMenu.value,
+                    'showTop -mt-1': isShowSelectsTop.value,
+                    'mt-1': !isShowSelectsTop.value
                 };
             });
 
@@ -285,7 +305,7 @@
 
                 selectedItem,
                 selectItem,
-
+                dropdownMenu,
                 container,
                 onFocus,
 
