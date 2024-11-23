@@ -1,0 +1,8 @@
+.dropdown-menu{
+    &.showTop{
+        top : var(--topPositionSelect)
+    }
+    &.-mt-1{
+        margin-top: -0.25rem;
+    }
+}
