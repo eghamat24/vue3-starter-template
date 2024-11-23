@@ -10,4 +10,8 @@
   &-bottom {
     transform: translateX(50%);
   }
+
+  &.show {
+    transition: all 0.3s;
+  }
 }
