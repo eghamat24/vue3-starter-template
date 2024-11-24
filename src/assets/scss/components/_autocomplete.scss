@@ -8,3 +8,14 @@
     right: $form-select-indicator-padding;
     background-size: $form-select-bg-size;
 }
+
+
+
+.dropdown-menu.auto-complete{
+    &.showTop{
+        top : var(--topPositionSelect)
+    }
+    &.-mt-1{
+        margin-top: -0.25rem;
+    }
+}
