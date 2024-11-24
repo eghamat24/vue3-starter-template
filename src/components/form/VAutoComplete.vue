@@ -23,7 +23,7 @@
                 />
             </div>
 
-            <ul :class="menuClassNames" style="max-height: 210px;">
+            <ul ref="dropdownMenu" :class="menuClassNames" style="max-height: 210px;">
                 <li
                     v-if="isLoading"
                     class="dropdown-item"
@@ -65,17 +65,17 @@
 </template>
 
 <script>
-    import { ref, computed, watch } from 'vue';
+    import {computed, nextTick, ref, watch} from 'vue';
 
     // Utils
-    import { isEmpty, getUniqueId, resolveIteratee } from '@/utils';
+    import {getUniqueId, isEmpty, resolveIteratee} from '@/utils';
 
     // Components
     import VLazyLoadHelper from '@/components/VLazyLoadHelper.vue';
 
     // Composables
-    import { useRegisterFormValidator } from '@/composables/validatation.composable';
-    import { onClickOutside } from '@/composables/click.composable';
+    import {useRegisterFormValidator} from '@/composables/validatation.composable';
+    import {onClickOutside} from '@/composables/click.composable';
 
     // Enums
     import ComponentSize from '@/enums/ComponentSize';
@@ -140,15 +140,30 @@
 
         setup(props, { emit }) {
             const { errors, isValid, validate } = useRegisterFormValidator();
-
+            const dropdownMenu = ref()
+            const isShowSelectsTop = ref(false)
             const isShowMenu = ref(false);
 
             function showMenu() {
                 isShowMenu.value = true;
+                const containerRect = container.value.getBoundingClientRect()
+                let dropDownPositionFromTop = containerRect.top
+                nextTick(() => {
+                    const dropDownRect = dropdownMenu.value.getBoundingClientRect()
+                    dropDownPositionFromTop += dropDownRect.height
+                    if (dropDownPositionFromTop > window.innerHeight) {
+                        isShowSelectsTop.value = true
+                        document.documentElement.style.setProperty('--topPositionSelect', `calc(-100% + ${container.value.getBoundingClientRect().height}px - ${dropdownMenu.value.getBoundingClientRect().height}px)`);
+                    }
+                })
+
             }
 
             function hideMenu() {
                 isShowMenu.value = false;
+                if (isShowSelectsTop.value) {
+                    isShowSelectsTop.value = false
+                }
             }
 
             const inputGroupClassNames = computed(() => {
@@ -165,8 +180,11 @@
             });
             const menuClassNames = computed(() => {
                 return {
-                    'dropdown-menu w-100 overflow-y-auto overflow-x-hidden mt-1': true,
-                    'show': isShowMenu.value
+                    'dropdown-menu auto-complete w-100 overflow-y-auto overflow-x-hidden': true,
+                    'show': isShowMenu.value,
+                    'showTop -mt-1': isShowSelectsTop.value,
+                    'mt-1': !isShowSelectsTop.value
+
                 };
             });
 
@@ -301,13 +319,13 @@
                 menuClassNames,
 
                 isShowMenu,
-
+                dropdownMenu,
                 search,
 
                 filteredItems,
                 addFilteredItems,
                 resetFilteredItems,
-
+                isShowSelectsTop,
                 selectItem,
 
                 container,
