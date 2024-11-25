@@ -9,9 +9,9 @@
     <VTableServer
         v-model:page="page"
         v-model:items-per-page="itemsPerPage"
-        :items="todos"
+        :items="todoStore.items"
         :items-length="200"
-        :is-loading="todosLoading"
+        :is-loading="todoStore.isLoading"
     >
         <VColumn :header="$t('Id')" field="id"/>
         <VColumn :header="$t('Title')" field="title"/>
@@ -59,6 +59,7 @@
 
     // Stores
     import { useUserStore } from '@/stores/user.store';
+    import { useTodoStore } from "@/stores/todo.store";
 
     export default {
         name: 'TodosView',
@@ -70,9 +71,8 @@
         },
 
         setup() {
-            const { todosLoading, todos, fetchTodos } = useFetchTodos();
             const { page, itemsPerPage, paginationParams } = useRoutePagination();
-
+            const todoStore = useTodoStore()
             const filters = useApplyFilters({
                 title: undefined,
                 userId: undefined,
@@ -87,10 +87,10 @@
                     }
                 };
 
-                return fetchTodos(config);
+                return todoStore.fetch(config);
             }
 
-            fetch();
+            fetch()
 
             watch([paginationParams, filters], () => fetch());
 
@@ -98,13 +98,12 @@
             userStore.fetch();
 
             return {
-                todosLoading,
-                todos,
 
                 page,
                 itemsPerPage,
 
                 filters,
+                todoStore,
 
                 userStore
             };
