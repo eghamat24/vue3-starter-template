@@ -116,6 +116,16 @@ class DateTime {
         return this;
     }
 
+    addTime(count) {
+        this._date.addSecond(count)
+        return this
+    }
+
+    diffInTimes(timestamp) {
+        const diffInSeconds = timestamp - this.getTimestamp();
+        return diffInSeconds < 0;
+    }
+
     subDay(count) {
         this._date.subDay(count);
         return this;
