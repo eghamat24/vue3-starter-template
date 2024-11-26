@@ -33,13 +33,21 @@ class StorageService {
     }
 
     /**
-     * Determine if an item exists
-     *
      * @param {String} name
      * @returns {Boolean}
      */
     static has(name) {
         return Boolean(this.get(name));
+    }
+
+    /**
+     * @param {String} name
+     * @param data
+     */
+    static update(name, data) {
+        if (localStorage.getItem(name)) {
+            localStorage.setItem(name, data)
+        }
     }
 }
 

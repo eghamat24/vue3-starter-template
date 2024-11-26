@@ -1,8 +1,9 @@
 const StorageType = {
     LocalStorage: 'localStorage',
     Local: 'local',
-    IndexDb: 'indexDb'
-
+    IndexDb: 'indexDb',
+    Session: 'session',
+    Other: 'other'
 };
 
 export default Object.freeze(StorageType);

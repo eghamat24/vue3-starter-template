@@ -5,18 +5,18 @@ import {defineStore} from 'pinia';
 import {useFetchTodos} from "@/composables/todo.composable";
 import CacheService from "@/services/cache.service";
 import {ref} from "vue";
+import StorageType from "@/enums/StorageType";
 
 export const useTodoStore = defineStore('todos', () => {
 
     const {todosLoading, todos, fetchTodos, todosKeyById} = useFetchTodos();
     const todo = ref(todos.value)
 
-    const cacheService = new CacheService(5, 0, "todos")
+    const cacheService = new CacheService(10, StorageType.LocalStorage, "todos")
 
 
     async function handleRequestWithCache(arg) {
         const argParams = JSON.stringify(arg.params)
-
         if (!cacheService.isCache) {
             await fetchTodos(arg)
             return
@@ -34,6 +34,7 @@ export const useTodoStore = defineStore('todos', () => {
             } else {
                 await fetchTodos(arg)
                 cacheService.updateDataFromCache(cacheIndex, todos.value)
+                todo.value = todos.value
             }
         }
 

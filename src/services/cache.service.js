@@ -1,8 +1,6 @@
 import StorageService from "@/services/storage.service";
-import storageService from "@/services/storage.service";
 import DateTime from "@/utils/date-time";
 import StorageType from "@/enums/StorageType";
-
 class CacheService {
     cacheName
     isCache = true
@@ -11,7 +9,7 @@ class CacheService {
     cacheData = []
 
     /**
-     * @param {number} cacheTime - millisecond
+     * @param {number} cacheTime - seconds
      * @param {string} storageCache
      * @param {string} cacheName
      */
@@ -21,7 +19,7 @@ class CacheService {
         this.cacheName = cacheName
         if (storageCache === StorageType.LocalStorage) {
             if (localStorage.getItem(cacheName)) {
-                this.cacheData = storageService.get(cacheName)
+                this.cacheData = StorageService.get(cacheName)
             }
         }
     }
@@ -32,11 +30,12 @@ class CacheService {
      * @param data
      */
     setCache(key, data) {
+        if (!this.isCache) return
         const DateTimes = new DateTime()
         const finalValue = {key, data, expire: DateTimes.jalali().getTimestamp() + this.cacheTime}
         this.cacheData.push(finalValue)
         if (this.storage === StorageType.LocalStorage) {
-            StorageService.set(this.cacheName, finalValue)
+            StorageService.set(this.cacheName, this.cacheData)
         }
     }
 
@@ -50,13 +49,15 @@ class CacheService {
      * @return {number}
      */
     getCacheDataIndex(key) {
-        return this.cacheData.findIndex(item => item.key === key)
+        return this.cacheData?.findIndex(item => item.key === key)
     }
 
     /**
      * @param {number} index
      */
     getDataFromCache(index) {
+        if (!this.isCache) return null
+
         if (this.isExpireCache(index)) {
             return null
         } else {
@@ -65,9 +66,13 @@ class CacheService {
     }
 
     updateDataFromCache(index, newData) {
+        if (!this.isCache) return
         const DateTimes = new DateTime()
         this.cacheData[index].expire = DateTimes.jalali().getTimestamp() + this.cacheTime
         this.cacheData[index].data = newData
+        if (this.storage === StorageType.LocalStorage) {
+            StorageService.update(this.cacheName, JSON.stringify(this.cacheData))
+        }
     }
 
 
@@ -78,14 +83,30 @@ class CacheService {
 
     removeCache(index) {
         this.cacheData = this.cacheData.splice(index, 1)
+        if (this.storage === StorageType.LocalStorage) {
+            StorageService.update(this.cacheName, this.cacheData)
+        }
     }
 
     clearCache() {
         this.cacheData = []
+        if (this.storage === StorageType.LocalStorage) {
+            StorageService.delete(this.cacheName)
+        }
     }
 
-    changeCache(newCacheTime) {
+    changeCacheTime(newCacheTime) {
         this.cacheTime = newCacheTime
+    }
+
+    /**
+     * @param {Boolean} newCacheStatus
+     */
+    changeCacheStatus(newCacheStatus) {
+        if (!newCacheStatus) {
+            this.clearCache()
+        }
+        this.isCache = newCacheStatus
     }
 }
 
