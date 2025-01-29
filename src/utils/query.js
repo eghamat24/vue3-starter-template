@@ -123,7 +123,7 @@ const QueryString = {
                 for (const key in value) {
                     traverse(value[key], path ? `${path}[${key}]` : key);
                 }
-            } else if (value !== undefined) {
+            } else if (value !== undefined && value !== null) {
                 params.append(path, value);
             }
         }
