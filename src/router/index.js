@@ -1,10 +1,15 @@
 import { createRouter, createWebHistory } from 'vue-router';
 
+// Middlewares
 import AuthenticateRoute from './middleware/AuthenticateRoute';
 import AuthorizeRoute from './middleware/AuthorizeRoute';
 import RedirectIfAuthenticated from './middleware/RedirectIfAuthenticated';
 
+// Views
 import PanelView from '@/views/PanelView.vue';
+
+// Utils
+import QueryString from '@/utils/query';
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
@@ -44,8 +49,10 @@ const router = createRouter({
             // which is lazy-loaded when the route is visited.
             component: () => import('@/views/LoginView.vue'),
             beforeEnter: [RedirectIfAuthenticated]
-        }
-    ]
+        },
+    ],
+    parseQuery: (query) => QueryString.parse(query),
+    stringifyQuery: (query) => QueryString.stringify(query)
 });
 
 export default router;
